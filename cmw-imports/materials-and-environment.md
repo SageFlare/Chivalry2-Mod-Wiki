@@ -1,43 +1,61 @@
-# Materials, lighting and environmental behavior
+# Materials and environment
 
-## Material conversion
+## Material graphs
 
-Collect complete material graphs, instance inheritance, static switches, masks, texture identities, root settings and component slot overrides. A texture export is not a shader conversion. Preserve missing assignments as structured warnings instead of inventing textures or silently using defaults.
+- Resolve a material by the path its user saves (component slot, mesh element import path, or the mesh's own package), never by object name across packages.
+- **Function calls:** inline UE3 material function calls. Bind inputs by Id and cast each input to its declared type (Scalar takes `.r`, as UE4's `ValidCast`). The call's output is the FunctionOutput's A input. Texture-object and static-bool arguments bind by reference. An unconnected function input needs `bUsePreviewValueAsDefault`.
+- **Unconnected inputs:** an exported input without `Expression=` is unconnected. A static switch that selects an empty branch counts as unconnected too.
+- **Node translation:**
+  - A dynamic `If` maps to UE4 `If` only when its equal branch repeats another branch.
+  - UE3 `CameraVector` is tangent-space: use `CameraVectorWS` plus a world-to-tangent transform.
+  - `CameraWorldPosition` becomes `CameraPositionWS`; `DepthBiasedAlpha` becomes `DepthFade`.
+  - `SceneDepth` translates only without normalization and without connected coordinates.
+  - Distortion has no route and is a listed drop.
+- **Water normals:** an Unlit water material ignored its normal input. Feed the normalized source normal into the reflection and Fresnel consumers explicitly.
+- **Unbound samplers:** a source material whose output reads a texture sampler without a texture does not compile in the CMW SDK. Record it; never invent a binding.
+- **No silent defaults:** stop on a material with nothing connected, or a slot with no material, unless an explicit deferral names it with a reason. List every dropped channel.
+- **Usage flags:** save `bUsedWithInstancedStaticMeshes` at import. Placing foliage set it only in memory, and the cooked game drew the default material (in game). Sprite and mesh-particle flags likewise. See [lighting and materials](../lighting-and-materials.md).
+- **Textures:** set group, then compression, then sRGB. The importer can mistake a light map for a normal map.
 
-Validate saved graphs and mesh inputs independently, including any baked-lighting material variants. Existing graph state can survive repeat authoring; clear incompatible prior connections/settings or reject the transition. Tags describing an intended graph do not establish the saved graph's behavior.
+Function-call and water translations: editor and cook; in game for some graphs only.
 
-Unlit water may ignore an attached normal input when the shader path does not consume it. Feed the normalized source normal explicitly into source-derived reflection/Fresnel consumers in the proper space. Do not invent refraction merely to make a normal input active. Keep distortion and other unsupported channels explicit.
+## Decals
 
-## Source baked lighting
+UE4 deferred decals cannot draw on Unlit surfaces. Ported static decals became **receiver geometry**:
 
-Preserve lightmap/shadowmap textures, component bindings, atlas transforms, decode coefficients, UV channels and light associations. Source shaders and attributed GPU draws can clarify semantics; class names and texture appearance are insufficient.
+- Clip each receiver's front-facing triangles to the decal frustum (near to far along the negative hit normal, ±W/2 and ±H/2 across). Take receivers from the serialized `DecalReceivers` list; component names repeat across actors.
+- u = 0.5 − t/W, v = 0.5 − b/H. Drop slivers with an edge under 0.05 units.
+- Light each piece with its receiver's light map through a decal-material adapter; for vertex-lit receivers, interpolate the lighting coefficients at the clip points. Unlit decal materials need no light data. Pieces on movable receivers attach to the receiver.
 
-Vertex-lighting decode can occur before interpolation, which is not equivalent to decoding an interpolated encoded value. Two-sided shading, alpha, shadow terms, color encoding and lower mips require separate checks.
+Approximations: the decal normal map is not rotated into the receiver's tangent basis; UE3's depth fade is not ported (hard edge). Movable and tiled decals are not covered. Evidence: editor and in game.
 
-Displaying recovered baked diffuse through an Unlit material can preserve part of the source appearance while losing specular and dynamic-light interaction. State those limits. It is not equivalent to generating native UE4 Lightmass data or full renderer parity.
+## Post-process, fog and sky
 
-For source terrain normals, inspect the actual packed channels and reconstruction rule. Verify generated section geometry and UV precision independently.
+- **Effective post-process settings:** UE3 `PostProcessVolume` override flags mostly default to TRUE, so flags the export omits still override. Derive struct defaults, then world settings, then each volume's overrides.
+- **Local colour grading:** one bounded UE4 volume per source volume, with the source LUT, the exact hull, blend radius 0 and priority in source order. UE3 time fades have no UE4 match; the switch is instant (recorded).
+- **Light shafts:** UE 4.25's light-shaft shader is the UE3 one, so shaft occlusion and bloom parameters map one to one (non-directional shaft lights recorded as partial). Copied 1:1 they were too strong in the Chivalry 2 scene; see [completion rules](completion-rules.md#atmosphere).
+- **Bloom** (max-RGB threshold, clamped gather) has no faithful UE4 equivalent: stage 2 records it, stage 3 approximates it.
+- **Height fog** derives from saved values plus the dominant light. Source fog also applies per vertex to translucent and additive materials and particles, which the opaque pass does not cover.
+- **Custom lighting needs a light pass.** UE3 evaluates custom-lighting materials only for components that accept lights. A sky dome with `bAcceptsLights=False` never drew its material sun.
 
 ## Foliage and motion
 
-Preserve instance transforms and per-instance attributes. World-position-offset fidelity depends on effective runtime inputs, not just the material graph. Identify sampled GPU draws by mesh, world position, pass and LOD before generalizing captured constants.
+Place foliage as hierarchical instances with source transforms, seed and per-instance data. Decide world-position-offset motion from rendered uses (mesh slot or override, per LOD), not from reference reach: meshes keep stale material references. Check the wind input only in graphs that read it. CMW bush sway stretched in UE4 and is a stage 3 replacement candidate. Static recovery of cloth or skeletal props is not simulation.
 
-In the inspected UE3 vertex factory, instanced and ordinary meshes used different color semantics, and instancing replaced alpha with cull fade. Observed stride-zero white bindings on selected draws did **not** establish a universal white-color rule. Keep unresolved native buffer selection explicit; do not erase valid source colors to match one capture.
+## Effects
 
-Static recovery of cloth or skeletal props does not establish continuous simulation. A target cloth solver, invented wind or altered gravity is a separately documented approximation.
+- Rewrite classes and properties without a UE4 equivalent only when exact; otherwise record them. Refuse and record systems using a class missing from UE 4.25 instead of letting the editor stage fail.
+- UE3 SubUV with no interpolation shows the whole texture, but UE 4.25 sprites always sample one sub-image. Set sub-images to 1×1 for those modules (seen in game as tiled squares).
+- UE3 mesh-emitter pre-rotation becomes a fixed `RollPitchYawRange` (min equals max).
+- Apply owner scale only on world-space emitters. Local-space emitters already inherit the actor scale; forcing it scaled them twice (in game).
+- Create particle LOD levels under their emitter, modules and distributions under the system. A component's `EmitterMaterials` is transient in UE 4.25 (per-emitter overrides are not saved). UE 4.25 Python does not expose Cascade modules; editing them needs native code.
+- **Crash at load (in game):** an auto-activated placed emitter whose system has mesh emitters crashed Chivalry 2 about 50 s after map load. Probe maps ruled out mesh asset, loop count, kill-on-completed and emitter space; sprite-only systems loaded. Mechanism unknown. Workaround: one-shot mesh-emitter systems start deactivated. One looping mesh system loaded fine elsewhere, unexplained.
 
-## Effects, audio and regions
+## Audio
 
-- Preserve particle module enabled states, emitter distributions, ownership and effective activation. Exported disabled modules should remain disabled.
-- Scope hidden flags to the correct component: hidden editor sprites do not prove a particle emitter is inactive.
-- Particle deactivation may stop spawning while existing particles fade. Do not require immediate destruction as the only success criterion.
-- Normalize reversed bounding-box endpoints only when source/target engine behavior justifies it, retaining the original evidence.
-- Preserve audio cue topology, delays, looping, attenuation, randomization and state triggers. Similar node names do not guarantee equivalent behavior.
-- Treat reverb preset mapping, wet sends and filter conversion as explicit adapters. Correct region shape and enum names do not establish DSP or mix parity.
-- Compare all corners/planes of source volumes, priorities and inherited flags. Do not enlarge a volume merely to pass containment checks.
-- Preserve effective draw distances and source culling state. Runtime reculling requires its own verified semantics; do not apply source regions indiscriminately to synthetic target helpers.
-- Fog, gamma, LUTs and output transforms can dominate apparent brightness. Use matched views and effective source state; uncontrolled exposure sweeps do not prove numerical calibration.
+- Convert cue graphs whose root is one attenuation node over loop, modulator, delay, random and wave nodes, keeping node order (a modulator outside a loop draws once per play). Index mixer weights by source slot. `AmbientSoundSimple` inline nodes become cue graphs; auto-activation follows the class's `bAutoPlay`.
+- Map distance models by name; fail on an unknown one, never fall back to Linear. Oscillators, loop counts and continuous modulators stay unsupported. Cues without attenuation play non-spatialized at full volume in both engines.
+- Infinite-plane sources become a world-aligned box: half-extent `radius_min` on the plane's distance axis, map bounds plus `radius_max` on the other two, falloff `radius_max − radius_min`.
+- Reverb presets need an explicit adapter; a correct region shape does not establish matching DSP.
 
-Environment conversion may require manual editor work where standard Python cannot author the relevant graph or property. This wiki supplies no custom native helper. Record remaining work rather than claiming automation through an unavailable API.
-
-Finish with saved-asset checks, representative renders, package validation and shipping-game visual/listening/traversal tests. Each answers a different question.
+Volume sliders and Wwise: [completion rules](completion-rules.md#sound).

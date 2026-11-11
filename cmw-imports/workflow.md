@@ -1,39 +1,59 @@
-# Collection and conversion contracts
+# Stages, contracts and release
 
-The following staged architecture is a reusable **design proposal** informed by experiments. Portable arbitrary-map replay was not completed by those experiments. Do not present these stages as supplied executable commands.
+## Stage separation
 
-| Stage | Output and boundary |
-| --- | --- |
-| Collect | Original resources, typed scene data, defaults, dependencies and unresolved raw evidence |
-| Convert base | Source-derived scene with supported geometry, materials and environmental state; explicit unsupported records |
-| Add replacements | Separate derived artifact with recorded UE4/C2 substitutions and rationale |
-| Add gameplay | Separately authored FFA or objective rules, spawns, navigation and state transitions |
-| Package/test | Selected artifact, archive checks and runtime validation |
+- Each stage reads the previous stage's output and never changes it. A reader can stop after any stage: a collection or a faithful base is usable on its own.
+- Stages 1 and 2 do not package. A package from stage 2 or 3 is a test build behind an explicit opt-in; release packaging is its own step.
+- Stage 2 is faithful to **what the final map uses**, not to CMW engine-era processing. Distance culling (cull-distance volumes, foliage instance cull, emitter draw distances) was dropped and recorded; stage 1 still collects it. Placement-bearing gameplay actors (starts, objectives) stay as records.
+- Anything without a direct conversion goes to stage 3 as a named item: a flag, never a silent substitute.
 
-Users should be able to consume a collection or base directly. Collection does not implicitly install a PAK or choose a game mode. Artistic tuning remains distinct from automatic conversion or recorded replacement rules.
+## One method per feature
 
-## Bundle requirements
+Use one conversion method per feature for every map. Where maps need different handling, branch on a **source flag or property** recorded with evidence, never on the map's name. Examples that held across maps:
 
-- Use package/group/object identities, not short names or exported filenames, as keys. Keep identities separate from filesystem-safe filenames.
-- Record schema, source/tool/profile hashes, outputs, coverage and completion state. All consumer file references should be relative to the bundle root; omit personal absolute paths from shared provenance.
-- Retain original bytes and typed evidence, including unsupported payloads. Raw collection does not mean semantic understanding.
-- Include streamed levels, component-local transforms, class defaults, material dependencies, collision policies and relevant environmental state links.
-- Discover visual mesh components across owner classes, including gameplay actors. Do not discard scenery merely because its owner implements an objective. Do not blindly place nested particle payloads as ordinary scenery.
-- When conversion discovers missing inputs, emit a typed request with source identity, field, attempted rule and required collector capability. Recollect into a new revision; do not silently read the installed source from a supposedly portable stage.
-- Prove independence with an offline replay that denies access to the original installation. Valid hashes alone do not establish independence.
+- `LightMapCoordinateIndex` missing from a mesh export: the light map is in UV0 (the exporter omits default values).
+- `TwoSidedLightingMask` present: the material needs a transmission term.
+- Landscape normal input unconnected: use the heightmap normal only.
+
+Fix a stage failure as a general rule and re-run, rather than patching one map.
+
+## Bundle requirements (stage 1)
+
+- Key objects by package/group/object identity, never short names or exported filenames. Several CMW packages define materials with the same short name; resolving by name bound the wrong one.
+- Record schema, tool versions, input identities, outputs, coverage and completion state. References inside the bundle are relative to its root.
+- Keep original bytes and typed evidence, including unsupported payloads.
+- Include streamed levels (follow them recursively), component-local transforms, class defaults, material dependencies, collision policies and environment state links. Find visual mesh components on every owner class, including gameplay actors.
+- A missing input becomes a typed request to the collector and a new bundle revision. A later stage must not quietly read the installed game.
+- Size a map by all its levels, including art sub-levels, not the persistent package.
 
 ## Starting state
 
-Preserve saved actor/component values and resolved source defaults. Missing inheritance evidence is unresolved; do not substitute UE4 defaults or guessed zero/false values.
+- **Unsaved values are class defaults.** Read the CMW SDK UnrealScript `defaultproperties`. An unset bool is false, not true. Examples: `InterpActor` defaults `bCollideActors` to false; `InstancedFoliageActor` sets no collision.
+- **Omitted struct members** take `structdefaultproperties` (for example LinearColor alpha 1).
+- **Gates and barriers** keep their authored state: closed stays closed. Opening them is manual or a stage 3/4 rule.
+- **Streaming levels:** place what the source has loaded once play settles with players present but idle. Evaluate the Kismet graph with no input: fire level-loaded events, one player spawn, sequence activations and remote events; evaluate delays, gates, integer compares and level streaming; stop at every branch that needs input. Place the always-loaded levels plus the levels loaded at the end of that run.
+  - Placing every alternative level stacks them. Placing none can leave holes, because alternatives can hold structure the always-loaded art needs.
+  - Actors that Kismet hides, moves or re-collides after map start keep their map-start state and are recorded.
 
-Closed gates and intact barriers are legitimate source-state output. Keep alternate states, keys, bindings and attachments for later editing. Optional opening requires an explicit profile, verified source poses and clearance checks. Disabling collision while leaving a visible closed gate is not a faithful opening.
+Evidence: class defaults and gate states editor and in game; the settled streaming-level rule editor only (not separately checked in game on a map with alternative levels).
 
-Use source scale 1.0 in original records. Any target-player scale adaptation belongs in an explicit profile affecting the full scene, not selected mesh positions only.
+## Packaging and release
 
-## Fidelity accounting
+**Library and map split.** Assets used by several maps go to one shared library; each map package holds only what is map-specific.
 
-Track each identity by facet: geometry, attributes, material assignment, shader channels, collision, lighting, audio/effects and state. Use converted, approximated, unsupported, excluded or unverified dispositions with evidence.
+- The library never references a map. Check this on the full dependency closure.
+- Anything that carries a map's own data stays map-local: light-map adapter materials, foliage meshes and their materials.
+- Reuse a library asset only when it is provably the same: equal material specification, equal mesh material bindings and slot layout, equal texture settings. Otherwise import a map-local copy or a recorded variant.
+- To repoint references, copy the asset, add session-only core redirects (package and object), re-save, then end the editor session (UE 4.25 cannot remove a redirect list).
+- Do not consolidate assets for this. In UE 4.25 `consolidate_assets` re-points hard references only; soft references (for example material texture streaming data) still need the redirector. The cooker does not cook redirector-only packages and rewrites cooked soft paths to the destination. `find_object` follows redirectors unless told not to.
 
-An object can have correct geometry and unsupported motion. A complete actor inventory does not establish shader fidelity. Aggregate nested limitations even when a top-level queue is empty. Separate source coverage, available conversion inputs, target fidelity and gameplay acceptance; avoid a single misleading completeness percentage.
+**Prune unused content.** The map is the package's only entry point. Keep only mod packages reached through cooked name tables, including FName numbered siblings (`<name>_<n>`), and list the rest. No manual inspection was needed.
 
-Choose conversion methods from explicit prerequisites. Reject ambiguous correspondence instead of trying transformations until something looks plausible. Invalidate cached decisions when sources, tools or profiles change. Validate saved output independently of the authoring code.
+**Chunks and installation.**
+
+- Split large releases into chunk archives below the hosting size limit. We used at most 1.8 GB per chunk against a 2 GB limit. Keep a stable unit-to-chunk assignment, and round-trip each chunk (extract, compare bytes).
+- Install the library before the maps that depend on it.
+- UE4 mounts the `Paks` folder recursively, so library chunks may sit in a subfolder. With the launcher version we used, Unchained listed mods from the `Paks` root only, so put map packages in the root. Check this against your launcher version.
+- One merged library archive and many per-package chunks gave the same game-start and map-load times (in game, measured from the Unchained log).
+
+General cook and archive checks: [cook and package](../cook-and-package.md), [PAK review](../pak-review.md).

@@ -8,7 +8,7 @@ The following FFA pattern was exercised in custom maps. It requires implementing
 
 1. Use one-slot `BaseSpawner` actors (`rows=1`, `columns=1`) with wave parameters `override_faction=True`, `faction=FFA`.
 2. Reference them through a `GroupSpawner`, with child priority 0, max -1 and `spawner_selection_mode=UNIFORM_DISTRIBUTE`. Assign the group as World Settings `attacker_initial_spawn`.
-3. Configure a `SpawnSequence` with those base spawners, faction FFA, and explicit wave timing. Tested values were three simultaneous waves and one second between waves, with the half-wave timing override disabled.
+3. Configure a `SpawnSequence` whose spawner list holds one entry: the `GroupSpawner` from step 2, as the official FFA maps do. Listing the base spawners individually made each wave fill one spawner at a time, which gave very slow respawns. Use faction FFA and disable the half-wave timing override. The official maps use six seconds between waves and one simultaneous wave; an earlier test with the individual spawners used three waves one second apart. See [FFA map setup](ffa-map-setup.md).
 4. When reducing startup delay, set both each timing value and its override flag. Tested values for `seconds_before_spawning_starts`, `minimum_wait_time_seconds` and `prespawn_time` were zero; the joinable window remained five seconds.
 5. Implement authority-side startup logic that waits for the match to be in progress before activating the sequence. Blind BeginPlay activation caused pre-match pawn/spectating problems. Inspect the SDK's match-state interfaces and verify the actual shipping sequence.
 
