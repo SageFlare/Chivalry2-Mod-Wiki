@@ -6,6 +6,7 @@ Publish reusable procedures and findings. Keep personal development logs in a se
 
 - Exclude usernames, personal filesystem paths, machine names, server addresses, credentials, private repositories and installation receipts.
 - Exclude custom mod settings, release histories, private tool APIs, helper-script commands and links that require another workspace folder.
+- Do not use private pipeline numbering or work-item codes ("Script 2", "stage 3", issue numbers). Name each step by what it does (for example collection, base conversion, completion), so a reader without the original workflow can follow it.
 - When a mod demonstrates a general lesson, explain the mechanism, version, validation method and limitation without requiring that mod.
 - Standard Unreal package paths, documented SDK classes, public tools and reader-defined path placeholders are appropriate.
 - Do not copy private standing permissions into public procedures. A guide does not authorize installation, process termination, source changes or publication.
