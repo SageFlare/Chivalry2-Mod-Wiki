@@ -15,6 +15,9 @@ The public [TBL API and Blueprint-node reference](https://github.com/Chiv2-Commu
 
 ## Saved instances
 
+A level-placed actor keeps its own saved values. In a tested case, a placed Blueprint actor still had `bReplicates=False` (and its old tick interval) after the class default was changed, so it never replicated to clients. Before a multiplayer test, check replication settings on each placed instance, not only on the Blueprint class. `bReplicates`, `bAlwaysRelevant` and `bReplicateMovement` are edit-defaults-only properties, so scripts cannot set them on instances through the normal property setter.
+
+
 Changing a placed Blueprint component through `set_editor_property` can rerun its construction script. References may become stale and edits may be overwritten. Reacquire references and validate after a cold reload. Runtime-only state often belongs in BeginPlay.
 
 Validate saved instances without spawning and mutating construction-script actors in headless validators; that pattern caused crashes in the tested setup. A fresh-process compile and saved-state inspection are stronger evidence than an in-session up-to-date status.
@@ -34,5 +37,7 @@ Nativization can omit user-defined enums and structs needed by a mod. With the A
 Fix: list each asset under `[BlueprintNativizationSettings]` as `+ExcludedAssets=/Game/Mods/<YourMod>/<Path>/<AssetName>` in `DefaultEditor.ini`, then recook. Use one line per asset; `ExcludedFolderPaths` only applies to Blueprint classes. Then require the type's cooked `.uasset`/`.uexp` in the actual PAK listing.
 
 Evidence: enums at package level (found when a mod's archive lacked them; the exclusion restored them); structs at package level and in game in a dedicated A/B test (UE 4.25.4): an excluded struct and enum were cooked and packed, while non-excluded controls were converted to C++ and absent from the PAK although the holder Blueprint still imported them. In game, a probe Blueprint wrote a value into the excluded struct at runtime, read it back through a variable of that type and branched on it correctly. Not tested: struct default values saved in assets, replication, SaveGame. Source caveat: an excluded asset can still be converted if it has a circular reference with a converted asset.
+
+Tested uses of an excluded user struct in Chivalry 2 (2026-11-11, [test repository](https://github.com/SageFlare/StructNativizationTest)): runtime write and read, struct-asset and Blueprint default values, values set per placed actor, arrays of structs, data tables with the struct as row type, SaveGame (persists across map loads and game restarts) and live replication to a client that joined a server.
 
 Save enum assets explicitly. Python name normalization and default ordering can differ from display labels; verify the saved value rather than assigning an arbitrary integer.
