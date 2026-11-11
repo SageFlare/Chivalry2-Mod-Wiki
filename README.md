@@ -1,8 +1,8 @@
 # Chivalry 2 Mod Wiki
 
-Reusable guidance for people and agents developing Chivalry 2 content with ArgonSDK and Unchained. This folder is standalone: copy it as a unit. It requires no personal workspace, private scripts, custom editor helpers, or example-mod assets.
+Reusable guidance for people and agents developing Chivalry 2 content with ArgonSDK and Unchained.
 
-These notes distill development observations recorded through **2026-11-11** (pages added or refreshed 2026-11-11: preflight checks, editor automation, cook and package, FFA map setup, Team Objective maps, mod audio, spawns step 3, CMW conversion; other pages date from 2026-10-20), primarily with **Unreal Engine 4.25.4**. They are a documentation snapshot, not a fresh compatibility audit. Version-specific observations must be checked against the reader's engine, SDK, launcher and game. Source experiments are summarized; their private logs and binaries are not distributed. A reported observation is not a reproducible test supplied by this wiki.
+These notes distill development observations recorded, primarily with **Unreal Engine 4.25.4**. They are a documentation snapshot, not a fresh compatibility audit. Version-specific observations must be checked against the reader's engine, SDK, launcher and game. Source experiments are summarized; their private logs and binaries are not distributed. A reported observation is not a reproducible test supplied by this wiki.
 
 ## Start here
 
