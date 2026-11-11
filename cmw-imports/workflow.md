@@ -3,7 +3,7 @@
 ## Stage separation
 
 - Each stage reads the previous stage's output and never changes it. A reader can stop after any stage: a collection or a faithful base is usable on its own.
-- Stages 1 and 2 do not package. A package from stage 2 or 3 is a test build behind an explicit opt-in; release packaging is its own step.
+- Stage 1 never packages. Stages 2 and 3 build no package unless a test build is explicitly requested; release packaging is its own step.
 - Stage 2 is faithful to **what the final map uses**, not to CMW engine-era processing. Distance culling (cull-distance volumes, foliage instance cull, emitter draw distances) was dropped and recorded; stage 1 still collects it. Placement-bearing gameplay actors (starts, objectives) stay as records.
 - Anything without a direct conversion goes to stage 3 as a named item: a flag, never a silent substitute.
 
@@ -54,6 +54,6 @@ Evidence: class defaults and gate states editor and in game; the settled streami
 - Split large releases into chunk archives below the hosting size limit. We used at most 1.8 GB per chunk against a 2 GB limit. Keep a stable unit-to-chunk assignment, and round-trip each chunk (extract, compare bytes).
 - Install the library before the maps that depend on it.
 - UE4 mounts the `Paks` folder recursively, so library chunks may sit in a subfolder. With the launcher version we used, Unchained listed mods from the `Paks` root only, so put map packages in the root. Check this against your launcher version.
-- One merged library archive and many per-package chunks gave the same game-start and map-load times (in game, measured from the Unchained log).
+- One merged library archive and many per-package chunks gave the same game-start and map-load times (in game on one map, measured from the Unchained log; which session used which layout was not logged).
 
 General cook and archive checks: [cook and package](../cook-and-package.md), [PAK review](../pak-review.md).

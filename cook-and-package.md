@@ -46,7 +46,7 @@ When maps share a library PAK, keep structural geometry in each map's own PAK. I
 - The map PAK holds only the map mod; a library PAK may reference only the library.
 - Assign each library package to exactly one PAK and keep that assignment stable; no path may appear in two PAKs. Ship the reference closure of what each map reaches.
 - Install library PAKs before map PAKs. The engine mounts PAKs in subfolders of `Paks`, but the tested Unchained launcher looked only in the `Paks` root for mods, so keep map PAKs in the root.
-- One merged library PAK and many per-folder library PAKs gave the same measured load times in a single game session, so the choice is about packaging.
+- One merged library PAK and many per-folder library PAKs gave the same measured load times on one map over several game sessions (which session used which layout was not logged; the numbers matched either way), so the choice is about packaging.
 
 An archive hash proves identity, not completeness. An editor-only importer/helper reference leaking into runtime packages is a release failure. Remove unnecessary import metadata after checking its role and revalidate dependency closure.
 

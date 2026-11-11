@@ -36,4 +36,4 @@ If a sound must stay on UE4 audio, scale it yourself with a SoundMix class overr
 - **Event-driven** (bind the options properties' value-changed event and the user-settings UI update event): partial in game. UE4 audio is paused or ducked while the menu is open, and the new volume applied only after the menu closed.
 - **Not possible from Blueprint:** routing UE4 audio into Wwise. `AkAudioInputComponent` is abstract and needs a native sample-buffer implementation.
 
-Related: a sound placed on a level-sequence audio track (for example a prologue voice line) is UE4 audio and is affected the same way; see [FFA map setup](ffa-map-setup.md).
+Related: a sound placed on a level-sequence audio track (for example a prologue voice line) is UE4 audio and is very likely affected the same way (inferred, not tested); see [FFA map setup](ffa-map-setup.md).

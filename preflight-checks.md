@@ -1,6 +1,6 @@
 # Preflight checks before editor runs and cooks
 
-A prepared editor run, rebuild or cook can take 10–20 minutes, and a failure usually adds a rollback and a rerun on top. Most failures recorded in the tested UE 4.25.4 ArgonSDK environment could have been caught by a check costing seconds or minutes. Climb the ladder below cheapest first and stop at the first failure. Skip a rung only with a stated reason, such as "no native code changed".
+A prepared editor run, rebuild or cook can take 10–20 minutes, and a failure usually adds a rollback and a rerun on top. In one recorded batch of map rebuilds (UE 4.25.4 ArgonSDK), most of the failed run loops could have been caught by a check costing seconds or minutes. Climb the ladder below cheapest first and stop at the first failure. Skip a rung only with a stated reason, such as "no native code changed".
 
 ## The ladder
 

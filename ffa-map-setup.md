@@ -18,7 +18,7 @@ The game's own Blueprints run at play time; SDK stubs only provide names. Check 
 
 **Message table:** the table is not in ArgonSDK. Create an empty DataTable (row struct `GameModeMessageTable`) at the game's own path, `/Game/GameModes/MessageTables/MessageTable_FFA`, outside your mod folder, and reference it. Only the mod folder is packed, so at runtime the reference resolves to the game's real table. Verified in game: the "FREE FOR ALL" banner and kill callouts showed. Never ship the placeholder.
 
-Blueprint variables with spaces are reached from Python by their display names (for example `'Max Score'`).
+Blueprint variables with spaces are reached from Python by their raw names, not display names (see [editor automation](editor-automation.md)).
 
 ## Spawning
 
@@ -53,7 +53,7 @@ Default bots roam only toward destination points tagged `AI.DestinationVolume` (
 - The game holds the prologue for 10 s plus a fade. A shorter sequence repeats; official prologues are 15 s and get cut, so make yours 15 s.
 - The waiting sequence can be a master LevelSequence with a cinematic shot track (one sub-sequence per camera shot) and a fade track. With a ~30 s start, about 20 s remains for it.
 - Authoring sequences from Python needs the engine's SequencerScripting plugin enabled for that editor run.
-- Official maps play a map-name voice line from the prologue via a Wwise event track. A plain SoundWave on an audio track in your prologue was audible in game. Raise its Volume above 1 for loudness while keeping the peak below 0 dBFS. Such sounds ignore the game's volume sliders; see [Mod audio](mod-audio.md).
+- Official maps play a map-name voice line from the prologue via a Wwise event track. A plain SoundWave on an audio track in your prologue was audible in game. Raise its Volume above 1 for loudness while keeping the peak below 0 dBFS. Such sounds are UE4 audio, so they very likely ignore the game's volume sliders (inferred, not tested for sequence tracks); see [Mod audio](mod-audio.md).
 - Choose camera paths along open navmesh corridors, away from map-edge walls.
 
 ## Not possible from a map

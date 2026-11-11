@@ -44,4 +44,4 @@ Successful saving, matching hashes, actor counts or an empty work queue never es
 - No supplied parser, editor plugin or command. Several steps need native editor code because UE 4.25 Python does not expose the required API; the pages say where.
 - Exact visual parity is not claimed. Each page lists what stays approximate or unverified.
 
-This edition replaces the 2026-10-20 pilot notes. Those described a staged design as a proposal and baked lighting only through Unlit display materials. Both are now superseded: the stages above were used on complete maps, and CMW light maps can be imported as native UE4 build data.
+This edition replaces the 2026-10-20 pilot notes. Those described a staged design as a proposal and baked lighting only through Unlit display materials. Both are now superseded: stages 1–3 above were used on complete maps (stage 4 is still a proposal), and CMW light maps can be imported as native UE4 build data.

@@ -2,7 +2,7 @@
 
 How a mod map can run a staged Team Objective (TO) match: a chain of stages, objectives that complete them, spawns that move forward per stage, and a winner. FFA setup is covered in [FFA map setup](ffa-map-setup.md); spawner basics in [Spawns and navigation](spawns-and-navigation.md).
 
-Evidence: in the shipping game, one player, local Unchained match, 2026-11-10/11 (UE 4.25.4 ArgonSDK). A two-stage test map ran end to end, and a second test map exercised the objective types listed below. Several players, bots and dedicated servers were not tested; see the last section.
+Evidence: in the shipping game, one player, local Unchained match, 2026-11-10/11 (UE 4.25.4 ArgonSDK). A two-stage test map ran end to end, and a second version of the same map exercised the objective types listed below. Several players, bots and dedicated servers were not tested; see the last section.
 
 ## World settings
 
@@ -31,7 +31,7 @@ Observed in game: the objective bar follows the current stage, time is added on 
 
 ## Objectives verified in game
 
-- **Bar text:** on each stage's `On Started` (server), `TBLGameState.SetObjectiveContextText` with a message per faction and `IsValid` set, as retail TO maps do. Without it the bar had no title.
+- **Bar text:** on each stage's `On Started` (server), `TBLGameState.SetObjectiveContextText` with a message per faction and `IsValid` set, as the inspected retail TO map does. Without it the bar had no title.
 - **Hold an area:** retail `BaseCaptureArea` spawned at runtime, `ActivateTeamCapturePoint` at stage start, its capture tick bound to `AddScore` (+60 for the attacking team, -30 otherwise, the values retail level scripts use). Fill time is roughly Max Score / 60 ticks.
 - **Escort:** your own replicated cart Blueprint that, while its stage runs, counts living attackers and defenders in a box, moves only with at least one attacker and no defender, and adds the stage's Max Score at the end.
 - **Damage:** retail `Breakable_Crate` spawned at runtime, its `StatsComponent.OnKilled` bound to `AddScore(1)` with Max Score equal to the crate count. A spawned retail fire pit rack handed out torches that burned the crates.
@@ -39,7 +39,7 @@ Observed in game: the objective bar follows the current stage, time is added on 
 
 Spawn retail objective Blueprints (capture areas, breakables, weapon racks, siege engines) at runtime from your own actor, for example at placed target points. Placing them in the map cooks the SDK's reconstructed stub components instead of the game's. Some SDK siege stubs log Blueprint errors when loaded, which can fail a cook.
 
-Capture-area tuning lives on its `TeamCapturePointComponent` (`SetTeamCapturePointProperties`: tick interval, capture/neutralize time, players needed, allowed factions, auto-neutralize, immunity times). This is static evidence from SDK declarations and retail data; retail defaults are not the SDK stub values. A single-player probe found that without auto-neutralize the area kept scoring for its owner after everyone left; retail maps inspected enable auto-neutralize with zero immunity. Re-test before relying on any of these settings.
+Capture-area tuning lives on its `TeamCapturePointComponent` (`SetTeamCapturePointProperties`: tick interval, capture/neutralize time, players needed, allowed factions, auto-neutralize, immunity times). This is static evidence from SDK declarations and retail data; retail defaults are not the SDK stub values. In a single-player probe the area kept scoring for its owner after everyone left; static evidence suggests auto-neutralize was missing (untested); retail maps inspected enable auto-neutralize with zero immunity. Re-test before relying on any of these settings.
 
 ## Authoring limits (UE 4.25 Python)
 
@@ -47,7 +47,7 @@ Editor Python in 4.25 cannot add an interface to a Blueprint or reach the level 
 
 ## Shared objective pieces (proposal)
 
-Retail maps wire each objective by hand in their level script; every objective ultimately calls `AddScore` on a stage. A reusable approach is a small set of placed objective Blueprints sharing one contract: a reference to the stage they score, per-faction bar texts, arming on the stage's start (server only), and replication of what clients see. This design is only partly tested, in single-player probes. In one probe, destroying a breakable actor in the same frame it scored crashed the game when it had been hit by a thrown weapon; retail breakables hide and disable collision instead of destroying. That fix is untested.
+Retail maps wire each objective by hand in their level script; every objective ultimately calls `AddScore` on a stage. A reusable approach is a small set of placed objective Blueprints sharing one contract: a reference to the stage they score, per-faction bar texts, arming on the stage's start (server only), and replication of what clients see. This design is only partly tested, in single-player probes. In one probe, breaking a breakable actor that had been hit by a thrown weapon crashed the game (one game did not crash; no symbols). Best guess, not confirmed: destroying the actor in the same frame it scored; retail breakables hide and disable collision instead of destroying. That fix is untested.
 
 ## Not tested
 
