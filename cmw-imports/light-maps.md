@@ -2,11 +2,11 @@
 
 CMW maps ship precomputed lighting. Converting it avoids a new bake and keeps the original look. Three routes were used:
 
-| Route | Stage | Look | Notes |
+| Route | Pass | Look | Notes |
 | --- | --- | --- | --- |
-| Unlit adapter materials decode CMW light maps | 2 (faithful reference) | Closest to CMW | Every CMW light must stay Movable, so dynamic shadow cost is high |
-| CMW light and shadow maps written as UE4 build data | 3 (default) | Close; somewhat darker on one map, accepted | Needs native editor code; no Lightmass |
-| New Lightmass bake | 3 (trial) | UE4's own; needed calibration | Bake memory grows with the map |
+| Unlit adapter materials decode CMW light maps | base conversion (faithful reference) | Closest to CMW | Every CMW light must stay Movable, so dynamic shadow cost is high |
+| CMW light and shadow maps written as UE4 build data | completion (default) | Close; somewhat darker on one map, accepted | Needs native editor code; no Lightmass |
+| New Lightmass bake | completion (trial) | UE4's own; needed calibration | Bake memory grows with the map |
 
 ## Source data (source)
 
@@ -58,4 +58,4 @@ Evidence: editor, package and in game on one map; superseded as default by route
 
 ## Character lighting
 
-CMW's precomputed light volume was written as UE4 precomputed volume lighting (indirect lighting cache) in the last authoring step of stage 2. Later lighting writes must preserve it. Evidence: in game.
+CMW's precomputed light volume was written as UE4 precomputed volume lighting (indirect lighting cache) in the last authoring step of base conversion. Later lighting writes must preserve it. Evidence: in game.

@@ -1,18 +1,18 @@
-# Completion rules (stage 3) and Team Objective (stage 4)
+# Completion rules and Team Objective setup
 
-Stage 3 turns the faithful base into a playable Chivalry 2 FFA map with automatic rules. Everything stage 2 recorded as "no direct conversion" lands here.
+Completion turns the faithful base into a playable Chivalry 2 FFA map with automatic rules. Everything base conversion recorded as "no direct conversion" lands here.
 
 ## How the rules run
 
 - Rules run in a fixed order on a copy of the base map; the base stays untouched. Each rule builds on the verified result of the rule before it, verifies its own work in a fresh editor process and rolls itself back on failure. Rules can be undone newest-first, which lets the base be regenerated.
-- Each rule derives its values from source data with one formula for every map. Per-map tuning is manual work after stage 3.
+- Each rule derives its values from source data with one formula for every map. Per-map tuning is manual work after completion.
 - Order used: atmosphere → scale → sound (Wwise bank) → slider-volume fallback (SoundMix) → damage volumes → siege/resupply replacements → traps and other map logic → FFA → light-map import ([light maps](light-maps.md)).
 - Rules that add primitives run before the FFA and lighting rules, so navigation and build data cover the finished map.
 
 ## Atmosphere
 
 - **Height fog:** UE3 and UE4 both divide saved density and falloff by 1000 before rendering. Copy the saved values; copying renderer-scale values made the fog 1000× too thin. Height, start distance and maximum opacity carry over. A single uniform colour, blended from the source's light and opposite colours, replaced UE3's split colouring.
-- **Bloom:** an unbound bloom-only post-process volume above the stage 2 volume. Threshold equals the source threshold. Intensity is the source scale times one global factor for Chivalry 2's scene brightness, calibrated to the official maps' atmosphere data (median bloom scale) and then checked in game. Two UE4 bloom stages carry the source tint (UE4 scales each stage by 1/6).
+- **Bloom:** an unbound bloom-only post-process volume above the base conversion's post-process volume. Threshold equals the source threshold. Intensity is the source scale times one global factor for Chivalry 2's scene brightness, calibrated to the official maps' atmosphere data (median bloom scale) and then checked in game. Two UE4 bloom stages carry the source tint (UE4 scales each stage by 1/6).
 - **Light shafts** use the same global factor. Copied 1:1 they were too strong on every map.
 
 Evidence: editor, package and in game on six maps. Unverified: bloom size mapping, threshold after exposure, translucent fog against CMW's per-vertex fog.
@@ -39,7 +39,7 @@ Evidence: the siege replacements and their facing were confirmed in game; the bu
 
 ## Map logic
 
-- Classify each Kismet chain by its trigger. Use, touch, level start and timer chains belong to stage 3. Objective events, stage changes, spawn changes and match end belong to stage 4. A chain needing both is split.
+- Classify each Kismet chain by its trigger. Use, touch, level start and timer chains belong to completion. Objective events, stage changes, spawn changes and match end belong to objective setup. A chain needing both is split.
 - **Levers:** Chivalry 2's simple lever Blueprint is a wall lever (back face at local Y 0, arm out of +Y, swinging about X). On a floor it needs roll −90. Take its yaw from where the CMW lever's own movement track moves the tip, not the CMW actor yaw. Hide the CMW lever base meshes. Evidence: the wall-pose bug was seen in game; the floor pose fix was installed, in-game confirmation pending.
 - State that only objectives change (objective gates, stage-revealed objects) keeps its CMW start state on an FFA map.
 
@@ -52,7 +52,7 @@ General setup: [first map](../create-first-map.md), [spawns and navigation](../s
 
 Evidence: in game on several maps. Unverified: bot behaviour (saved-data checks only), spawners on reachable roofs.
 
-## Stage 4: Team Objective (proposal)
+## Objective setup: Team Objective (proposal)
 
 **Not built.** Planned from a static audit of CMW source:
 

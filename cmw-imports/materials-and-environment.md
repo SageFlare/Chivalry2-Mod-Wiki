@@ -34,13 +34,13 @@ Approximations: the decal normal map is not rotated into the receiver's tangent 
 - **Effective post-process settings:** UE3 `PostProcessVolume` override flags mostly default to TRUE, so flags the export omits still override. Derive struct defaults, then world settings, then each volume's overrides.
 - **Local colour grading:** one bounded UE4 volume per source volume, with the source LUT, the exact hull, blend radius 0 and priority in source order. UE3 time fades have no UE4 match; the switch is instant (recorded).
 - **Light shafts:** UE 4.25's light-shaft shader is the UE3 one, so shaft occlusion and bloom parameters map one to one (non-directional shaft lights recorded as partial). Copied 1:1 they were too strong in the Chivalry 2 scene; see [completion rules](completion-rules.md#atmosphere).
-- **Bloom** (max-RGB threshold, clamped gather) has no faithful UE4 equivalent: stage 2 records it, stage 3 approximates it.
+- **Bloom** (max-RGB threshold, clamped gather) has no faithful UE4 equivalent: base conversion records it, completion approximates it.
 - **Height fog** derives from saved values plus the dominant light. Source fog also applies per vertex to translucent and additive materials and particles, which the opaque pass does not cover.
 - **Custom lighting needs a light pass.** UE3 evaluates custom-lighting materials only for components that accept lights. A sky dome with `bAcceptsLights=False` never drew its material sun.
 
 ## Foliage and motion
 
-Place foliage as hierarchical instances with source transforms, seed and per-instance data. Decide world-position-offset motion from rendered uses (mesh slot or override, per LOD), not from reference reach: meshes keep stale material references. Check the wind input only in graphs that read it. CMW bush sway stretched in UE4 and is a stage 3 replacement candidate. Static recovery of cloth or skeletal props is not simulation.
+Place foliage as hierarchical instances with source transforms, seed and per-instance data. Decide world-position-offset motion from rendered uses (mesh slot or override, per LOD), not from reference reach: meshes keep stale material references. Check the wind input only in graphs that read it. CMW bush sway stretched in UE4 and is a candidate for replacement during completion. Static recovery of cloth or skeletal props is not simulation.
 
 ## Effects
 

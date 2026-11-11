@@ -1,11 +1,11 @@
-# Stages, contracts and release
+# Passes, contracts and release
 
-## Stage separation
+## Pass separation
 
-- Each stage reads the previous stage's output and never changes it. A reader can stop after any stage: a collection or a faithful base is usable on its own.
-- Stage 1 never packages. Stages 2 and 3 build no package unless a test build is explicitly requested; release packaging is its own step.
-- Stage 2 is faithful to **what the final map uses**, not to CMW engine-era processing. Distance culling (cull-distance volumes, foliage instance cull, emitter draw distances) was dropped and recorded; stage 1 still collects it. Placement-bearing gameplay actors (starts, objectives) stay as records.
-- Anything without a direct conversion goes to stage 3 as a named item: a flag, never a silent substitute.
+- Each pass reads the previous pass's output and never changes it. You can stop after any pass: a collection or a faithful base is usable on its own.
+- Collection never packages. Base conversion and completion build no package unless a test build is explicitly requested; release packaging is its own step.
+- Base conversion is faithful to **what the final map uses**, not to CMW engine-era processing. Distance culling (cull-distance volumes, foliage instance cull, emitter draw distances) was dropped and recorded; collection still records it. Placement-bearing gameplay actors (starts, objectives) stay as records.
+- Anything without a direct conversion goes to completion as a named item: a flag, never a silent substitute.
 
 ## One method per feature
 
@@ -17,7 +17,7 @@ Use one conversion method per feature for every map. Where maps need different h
 
 Fix a stage failure as a general rule and re-run, rather than patching one map.
 
-## Bundle requirements (stage 1)
+## Bundle requirements (collection)
 
 - Key objects by package/group/object identity, never short names or exported filenames. Several CMW packages define materials with the same short name; resolving by name bound the wrong one.
 - Record schema, tool versions, input identities, outputs, coverage and completion state. References inside the bundle are relative to its root.
@@ -30,7 +30,7 @@ Fix a stage failure as a general rule and re-run, rather than patching one map.
 
 - **Unsaved values are class defaults.** Read the CMW SDK UnrealScript `defaultproperties`. An unset bool is false, not true. Examples: `InterpActor` defaults `bCollideActors` to false; `InstancedFoliageActor` sets no collision.
 - **Omitted struct members** take `structdefaultproperties` (for example LinearColor alpha 1).
-- **Gates and barriers** keep their authored state: closed stays closed. Opening them is manual or a stage 3/4 rule.
+- **Gates and barriers** keep their authored state: closed stays closed. Opening them is manual, a completion rule or an objective-setup rule.
 - **Streaming levels:** place what the source has loaded once play settles with players present but idle. Evaluate the Kismet graph with no input: fire level-loaded events, one player spawn, sequence activations and remote events; evaluate delays, gates, integer compares and level streaming; stop at every branch that needs input. Place the always-loaded levels plus the levels loaded at the end of that run.
   - Placing every alternative level stacks them. Placing none can leave holes, because alternatives can hold structure the always-loaded art needs.
   - Actors that Kismet hides, moves or re-collides after map start keep their map-start state and are recorded.
