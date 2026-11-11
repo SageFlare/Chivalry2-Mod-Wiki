@@ -26,6 +26,6 @@ Proposed architecture must be labeled as a proposal. Successful saving, matching
 2. Check relative links resolve inside this folder. Public links must not target private repositories or local files.
 3. Search for absolute paths, account identifiers, private helper names, mod names, deployment logs and stale claims of permission.
 4. Verify examples use reader-supplied roots and standard/public facilities. If automation needs unavailable tooling, describe the manual operation or algorithm instead.
-5. Confirm evidence qualifiers survived editing. Keep this README's topic index current.
+5. Confirm evidence qualifiers survived editing. Keep the README's topic index and the [agent index](AGENT-INDEX.md) current: every new or renamed page gets a row in both.
 
 The initial edition consolidates lessons rather than mirroring the private history tree. Personal build counts, hashes, tester routes and release plans are intentionally absent. VR research had no established runtime result and is not presented as a working setup.

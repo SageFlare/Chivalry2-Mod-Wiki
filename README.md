@@ -6,6 +6,8 @@ These notes distill development observations recorded through **2026-11-11** (pa
 
 ## Start here
 
+Agents and quick lookups: the [agent index](AGENT-INDEX.md) routes a task to one page.
+
 | Guide | Contents |
 | --- | --- |
 | [First mod](create-first-mod.md) | Blueprint actor, marker, loading and iteration |
