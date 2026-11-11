@@ -1,4 +1,4 @@
-# Maintaining a distributable wiki
+# Contributing to the Chivalry 2 Mod Wiki
 
 Publish reusable procedures and findings. Keep personal development logs in a separate private knowledge base.
 

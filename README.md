@@ -1,4 +1,4 @@
-# Chivalry 2 modding notes
+# Chivalry 2 Mod Wiki
 
 Reusable guidance for people and agents developing Chivalry 2 content with ArgonSDK and Unchained. This folder is standalone: copy it as a unit. It requires no personal workspace, private scripts, custom editor helpers, or example-mod assets.
 
@@ -36,5 +36,9 @@ These notes distill development observations recorded through **2026-11-11** (pa
 - [Unchained documentation](https://unchained.wiki/) and [launcher releases](https://github.com/Chiv2-Community/UnchainedLauncher/releases).
 
 Links identify upstream resources; their current availability and contents were not rechecked for this extraction. Prefer source and release notes matching your installed version when older tutorials disagree.
+
+## License
+
+Text © SageFlare, licensed under [Creative Commons Attribution 4.0 International](LICENSE) (CC BY 4.0): copy, adapt and share with credit. Chivalry 2, Chivalry: Medieval Warfare, Unreal Engine and the linked tools belong to their respective owners; this wiki contains no game assets.
 
 Paths such as `/Game/Mods/AgMods/ExampleMod` are illustrative Unreal package paths. `<ProjectRoot>`, `<EngineRoot>`, `<OutputRoot>` and `<GameRoot>` mean locations chosen by the reader. They are not commands to paste unchanged.
