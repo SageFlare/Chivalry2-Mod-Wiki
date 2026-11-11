@@ -43,7 +43,7 @@ Repository root holds only this index, the [README](README.md), [CONTRIBUTING](C
 | Mirrors and scene captures | [Mirrors and captures](visuals-and-audio/mirrors-and-captures.md) | [Lighting and materials](visuals-and-audio/lighting-and-materials.md) | scene captures, planar reflections, owner visibility, cost, telemetry |
 | Mod sounds and the volume sliders | [Mod audio](visuals-and-audio/mod-audio.md) | [Cook and package](packaging-and-hosting/cook-and-package.md) | Wwise bank, buses, loose files, `SoundMix` fallback |
 | Cook, package, install, publish | [Cook and package](packaging-and-hosting/cook-and-package.md) | [PAK review](game-research/pak-review.md) | cook scope, dependencies, loose files, library PAKs, install, registry `mod.json` v1 |
-| Review a PAK (content vs runtime) | [PAK review](game-research/pak-review.md) | [Cook and package](packaging-and-hosting/cook-and-package.md) | archive inventory, asset shadowing, runtime evidence |
+| Review a PAK (content vs runtime) | [PAK review](game-research/pak-review.md) | [Cook and package](packaging-and-hosting/cook-and-package.md) | archive inventory, asset shadowing, runtime evidence, SaveGame files, slot names |
 | Read game data (no game changes) | [Game data research](game-research/game-data-research.md) | [Blueprint authoring](editor-and-scripting/blueprint-authoring.md) | inheritance, ability tables, animation timing |
 | Host a server / travel problems | [Server hosting](packaging-and-hosting/server-hosting.md) | | baseline, version-specific travel |
 | Convert a Chivalry: Medieval Warfare (UE3) map | [CMW conversion](cmw-conversion/README.md) | [Passes and release](cmw-conversion/workflow.md) | collection, base conversion, completion, objective setup, release |
