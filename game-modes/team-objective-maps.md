@@ -43,7 +43,7 @@ Capture-area tuning lives on its `TeamCapturePointComponent` (`SetTeamCapturePoi
 
 ## Authoring limits (UE 4.25 Python)
 
-Editor Python in 4.25 cannot add an interface to a Blueprint or reach the level script Blueprint. Do those steps by hand in the editor or through your own editor C++ module. `GetActorOfClass` is impure in 4.25; unwired exec pins get it pruned. Compile every Blueprint, including the level Blueprint, and re-validate the saved map in a fresh editor process. See [Editor automation](editor-automation.md).
+Editor Python in 4.25 cannot add an interface to a Blueprint or reach the level script Blueprint. Do those steps by hand in the editor or through your own editor C++ module. `GetActorOfClass` is impure in 4.25; unwired exec pins get it pruned. Compile every Blueprint, including the level Blueprint, and re-validate the saved map in a fresh editor process. See [Editor automation](../editor-and-scripting/editor-automation.md).
 
 ## Shared objective pieces (proposal)
 

@@ -12,6 +12,12 @@ Publish reusable procedures and findings. Keep personal development logs in a se
 - Do not copy private standing permissions into public procedures. A guide does not authorize installation, process termination, source changes or publication.
 - Keep game assets, captures containing identifying data, and raw extraction bundles out of documentation releases. This folder distributes prose, not game content or third-party tools.
 
+## Layout
+
+- The repository root holds only `README.md`, `AGENT-INDEX.md`, `CONTRIBUTING.md` and `LICENSE`.
+- Every page lives in one topic folder (`getting-started/`, `game-modes/`, `editor-and-scripting/`, `visuals-and-audio/`, `packaging-and-hosting/`, `game-research/`, `cmw-conversion/`). Each folder has a `README.md` listing its pages. Add a folder only for a topic that does not fit an existing one.
+- New or moved page: add it to its folder README, the root README and the agent index; fix every relative link that pointed at the old path.
+
 ## Evidence
 
 Distinguish documentation/source inspection, editor execution, cold saved-asset validation, archive verification, and shipping-game tests. State which level supports a claim. Test one feature at a time and record versions and remaining uncertainty.
@@ -26,6 +32,6 @@ Proposed architecture must be labeled as a proposal. Successful saving, matching
 2. Check relative links resolve inside this folder. Public links must not target private repositories or local files.
 3. Search for absolute paths, account identifiers, private helper names, mod names, deployment logs and stale claims of permission.
 4. Verify examples use reader-supplied roots and standard/public facilities. If automation needs unavailable tooling, describe the manual operation or algorithm instead.
-5. Confirm evidence qualifiers survived editing. Keep the README's topic index and the [agent index](AGENT-INDEX.md) current: every new or renamed page gets a row in both.
+5. Confirm evidence qualifiers survived editing. Keep the folder README, the root README and the [agent index](AGENT-INDEX.md) current: every new or renamed page gets a row in all three.
 
 The initial edition consolidates lessons rather than mirroring the private history tree. Personal build counts, hashes, tester routes and release plans are intentionally absent. VR research had no established runtime result and is not presented as a working setup.

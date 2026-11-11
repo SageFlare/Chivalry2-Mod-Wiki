@@ -14,7 +14,7 @@
 - **Water normals:** an Unlit water material ignored its normal input. Feed the normalized source normal into the reflection and Fresnel consumers explicitly.
 - **Unbound samplers:** a source material whose output reads a texture sampler without a texture does not compile in the CMW SDK. Record it; never invent a binding.
 - **No silent defaults:** stop on a material with nothing connected, or a slot with no material, unless an explicit deferral names it with a reason. List every dropped channel.
-- **Usage flags:** save `bUsedWithInstancedStaticMeshes` at import. Placing foliage set it only in memory, and the cooked game drew the default material (in game). Sprite and mesh-particle flags likewise. See [lighting and materials](../lighting-and-materials.md).
+- **Usage flags:** save `bUsedWithInstancedStaticMeshes` at import. Placing foliage set it only in memory, and the cooked game drew the default material (in game). Sprite and mesh-particle flags likewise. See [lighting and materials](../visuals-and-audio/lighting-and-materials.md).
 - **Textures:** set group, then compression, then sRGB. The importer can mistake a light map for a normal map.
 
 Function-call and water translations: editor and cook; in game for some graphs only.

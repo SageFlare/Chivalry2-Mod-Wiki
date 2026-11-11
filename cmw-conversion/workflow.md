@@ -56,4 +56,4 @@ Evidence: class defaults and gate states editor and in game; the settled streami
 - UE4 mounts the `Paks` folder recursively, so library chunks may sit in a subfolder. With the launcher version we used, Unchained listed mods from the `Paks` root only, so put map packages in the root. Check this against your launcher version.
 - One merged library archive and many per-package chunks gave the same game-start and map-load times (in game on one map, measured from the Unchained log; which session used which layout was not logged).
 
-General cook and archive checks: [cook and package](../cook-and-package.md), [PAK review](../pak-review.md).
+General cook and archive checks: [cook and package](../packaging-and-hosting/cook-and-package.md), [PAK review](../game-research/pak-review.md).

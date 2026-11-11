@@ -14,7 +14,7 @@ Verified in game: a mod-supplied bank loaded and played, and its looping tone on
 
 - Build one bank in the v135 format. Route sounds to busses named as the game's: a Wwise bus ID is the 32-bit FNV-1 hash of the lowercase bus name, so identically named busses resolve to the game's busses (checked statically for several, including `MASTER`, `GAME`, `AMBIANCE`). The test bank used the same project ID as the game's banks.
 - Prefix every event, sound and bank name with something unique to your mod so its IDs cannot collide with the game's or another mod's.
-- The game loads banks by name, not through event-based packaging. Pack the `.bnk` as a loose file in the PAK at `TBL/Content/WwiseAudio/Windows/<Bank>.bnk`, alongside your cooked content. Add it to your PAK response file explicitly; a normal cook does not produce it. See [Cook and package](cook-and-package.md).
+- The game loads banks by name, not through event-based packaging. Pack the `.bnk` as a loose file in the PAK at `TBL/Content/WwiseAudio/Windows/<Bank>.bnk`, alongside your cooked content. Add it to your PAK response file explicitly; a normal cook does not produce it. See [Cook and package](../packaging-and-hosting/cook-and-package.md).
 - In Blueprint: `AkGameplayStatics.LoadBankByName`, then `PostEventByName`, `PostEventAtLocationByName` or an `AkComponent`'s `PostAkEventByName`. Unloading the bank on EndPlay is a sensible cleanup; its effect was not tested separately.
 
 Not verified: whether routing directly to the master bus behaves differently from an ambient bus (the menu has no ambient slider to tell them apart), and attenuation sharesets, random/sequence containers and 3D positioning in hand-built banks. Test each before relying on it.
@@ -36,4 +36,4 @@ If a sound must stay on UE4 audio, scale it yourself with a SoundMix class overr
 - **Event-driven** (bind the options properties' value-changed event and the user-settings UI update event): partial in game. UE4 audio is paused or ducked while the menu is open, and the new volume applied only after the menu closed.
 - **Not possible from Blueprint:** routing UE4 audio into Wwise. `AkAudioInputComponent` is abstract and needs a native sample-buffer implementation.
 
-Related: a sound placed on a level-sequence audio track (for example a prologue voice line) is UE4 audio and is very likely affected the same way (inferred, not tested); see [FFA map setup](ffa-map-setup.md).
+Related: a sound placed on a level-sequence audio track (for example a prologue voice line) is UE4 audio and is very likely affected the same way (inferred, not tested); see [FFA map setup](../game-modes/ffa-map-setup.md).

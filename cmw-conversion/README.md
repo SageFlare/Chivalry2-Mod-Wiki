@@ -1,5 +1,7 @@
 # Converting Chivalry: Medieval Warfare content
 
+[Home](../README.md) · [Agent index](../AGENT-INDEX.md)
+
 Methods and engine facts for converting Chivalry: Medieval Warfare (CMW, Unreal Engine 3) maps into Chivalry 2 mods built with ArgonSDK (UE 4.25.4) and loaded through Unchained. The methods below were used to convert several official CMW maps, duel and Team Objective layouts, into playable Chivalry 2 FFA maps. **The tooling that did this is private and is not supplied here.** The pages describe algorithms, rules and checks, so you can reproduce them with your own tools.
 
 A `.udk` map cannot be opened in UE4. Conversion means extracting assets and rebuilding the scene. Start from a legally available CMW installation: keep the full cooked package set and its texture caches, not just the map package. Treat the installation and every extraction as read-only.

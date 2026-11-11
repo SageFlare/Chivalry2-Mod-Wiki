@@ -4,7 +4,7 @@ A PAK is an asset container, not a safety guarantee. Blueprints can invoke nativ
 
 ## Review the whole archive
 
-Inventory every entry and mount path, custom dependency, loaded map and potential mod actor. Visible mod-menu entries do not describe everything in the archive. Inspect convention-based actor paths as well as marker metadata; see [first mod](create-first-mod.md).
+Inventory every entry and mount path, custom dependency, loaded map and potential mod actor. Visible mod-menu entries do not describe everything in the archive. Inspect convention-based actor paths as well as marker metadata; see [first mod](../getting-started/create-first-mod.md).
 
 Separate these findings:
 

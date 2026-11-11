@@ -9,8 +9,8 @@ The following are observations from the tested ArgonSDK environment (editor and 
 | One-pass script | `-ExecutePythonScript=<script>`; the editor exits after the script. Do not call `quit_editor()` (shutdown crash after saving) and do not add `-ExecCmds="QUIT_EDITOR"` (it runs first, so the script never runs) |
 | Wait for registry, navigation or render ticks | `-ExecCmds="py <script>"` with a Slate tick callback; the script calls `quit_editor()` itself |
 | Many short steps on one large map | A resident editor (below) |
-| Bake lighting | See [lighting](lighting-and-materials.md) |
-| Cook | See [packaging](cook-and-package.md) |
+| Bake lighting | See [lighting](../visuals-and-audio/lighting-and-materials.md) |
+| Cook | See [packaging](../packaging-and-hosting/cook-and-package.md) |
 
 Use absolute project and log paths; a relative project path crashed before any log was written. Useful flags include `-EnablePlugins=EditorScriptingUtilities -unattended -nop4 -nosplash -abslog=<log>`. UE 4.25 reads only the first `-EnablePlugins=` on a command line (source inspection), so put every plugin in one comma-separated list, for example `-EnablePlugins=EditorScriptingUtilities,SequencerScripting` for a run that edits level sequences. Check exit status and a script-specific completion marker; a missing marker is a failure. Run one authoring editor per project; do not interrupt an existing user session.
 

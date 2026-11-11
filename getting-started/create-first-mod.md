@@ -20,7 +20,7 @@ The inspected loader resolves an enabled mod actor by the convention `/Game/Mods
 
 ## Iterate
 
-Follow [cook and package](cook-and-package.md), ensuring the actor, marker and required companions are included. Install into the game installation used by Unchained, enable the mod through the version-appropriate loading controls, and enter a match. Check the message, change it, rebuild and verify that the new message appears.
+Follow [cook and package](../packaging-and-hosting/cook-and-package.md), ensuring the actor, marker and required companions are included. Install into the game installation used by Unchained, enable the mod through the version-appropriate loading controls, and enter a match. Check the message, change it, rebuild and verify that the new message appears.
 
 `Print String` is unsuitable as the sole shipping-game checkpoint. A successful editor preview does not establish discovery, packaging or runtime execution.
 

@@ -45,7 +45,7 @@ Evidence: the siege replacements and their facing were confirmed in game; the bu
 
 ## FFA
 
-General setup: [first map](../create-first-map.md), [spawns and navigation](../spawns-and-navigation.md), [FFA lifecycle](../ffa-lifecycle.md).
+General setup: [first map](../getting-started/create-first-map.md), [spawns and navigation](../game-modes/spawns-and-navigation.md), [FFA lifecycle](../game-modes/ffa-lifecycle.md).
 
 - One single-slot spawner per CMW start (the game's own start class and subclasses), with the source yaw. Plain `PlayerStart` actors are unused by CMW modes and stay unused.
 - One navmesh per map. Its bounds are the union of the ported blocking volumes and the starts plus a margin, with runtime generation set to Dynamic on the instance. Record a start off the navmesh; never use it as the path root. Kill volumes become null navigation areas (implemented; untested on a map that has kill volumes).

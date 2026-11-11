@@ -1,6 +1,6 @@
 # Cook, verify and install a mod
 
-Use the Unreal tools matching your engine. Examples describe paths; supply your own filesystem roots. Before a cook, climb the [preflight checks](preflight-checks.md).
+Use the Unreal tools matching your engine. Examples describe paths; supply your own filesystem roots. Before a cook, climb the [preflight checks](../editor-and-scripting/preflight-checks.md).
 
 | Item | Conventional location |
 | --- | --- |

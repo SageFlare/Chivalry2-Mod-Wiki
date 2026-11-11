@@ -6,28 +6,75 @@ These notes distill development observations recorded through **2026-11-11** (pa
 
 ## Start here
 
-Agents and quick lookups: the [agent index](AGENT-INDEX.md) routes a task to one page.
+Agents and quick lookups: the [agent index](AGENT-INDEX.md) routes a task to one page. Each folder has a README listing its pages.
 
-| Guide | Contents |
+### [Getting started](getting-started/README.md)
+
+First steps: a Blueprint mod and an FFA map, from setup to a loaded PAK.
+
+| Page | Contents |
 | --- | --- |
-| [First mod](create-first-mod.md) | Blueprint actor, marker, loading and iteration |
-| [First map](create-first-map.md) | FFA arena, initial spawning and navigation |
-| [Editor automation](editor-automation.md) | Launch modes, Python limitations and saved-state checks |
-| [Blueprint authoring](blueprint-authoring.md) | Graph semantics, SDK stubs and shipping behavior |
-| [Lighting and materials](lighting-and-materials.md) | Static-lighting usage flags, baking and material pitfalls |
-| [Preflight checks](preflight-checks.md) | Cheap-first check ladder before editor runs and cooks; UE 4.25 behaviours that broke runs, with workarounds |
-| [Spawns and navigation](spawns-and-navigation.md) | Respawn waves, match startup and intended routes |
-| [FFA map setup](ffa-map-setup.md) | Official-style FFA: world settings, message table, kill cap, start timing, bot roaming, cinematics, map limits |
-| [FFA lifecycle](ffa-lifecycle.md) | Match state, spawning, possession/control, death, respawn and completion; interface evidence and gaps |
-| [Team Objective maps](team-objective-maps.md) | Staged TO match from a mod: stage chain, victory stages, per-stage spawns, objectives verified in game, untested parts |
-| [Mod audio](mod-audio.md) | Mod sounds and the volume sliders: Wwise bank rule, packing, licence caveat, SoundMix fallbacks |
-| [Cook and package](cook-and-package.md) | Fresh output, dependency closure, archive checks, loose files, library/map split, publishing format and installation |
-| [Mirrors and captures](mirrors-and-captures.md) | Reflection techniques, performance and telemetry |
-| [Server hosting](server-hosting.md) | Setup sequence and version-specific travel pitfalls |
-| [Game data research](game-data-research.md) | Inheritance, ability tables and animation evidence |
-| [PAK review](pak-review.md) | Static findings versus actual runtime behavior |
-| [CMW conversion](cmw-imports/README.md) | Staged UE3 → UE4 map conversion: source collection, geometry and collision, materials and environment, light maps, completion rules, packaging and verification |
-| [Contributing](CONTRIBUTING.md) | Public-content boundary and evidence requirements |
+| [First mod](getting-started/create-first-mod.md) | Blueprint actor, marker, loading and iteration |
+| [First map](getting-started/create-first-map.md) | FFA arena, initial spawning and navigation |
+
+### [Game modes](game-modes/README.md)
+
+How matches, spawns and objectives work, and how a map sets them up.
+
+| Page | Contents |
+| --- | --- |
+| [FFA map setup](game-modes/ffa-map-setup.md) | Official-style FFA: world settings, message table, kill cap, start timing, bot roaming, cinematics, map limits |
+| [Spawns and navigation](game-modes/spawns-and-navigation.md) | Respawn waves, match startup and intended routes |
+| [FFA lifecycle](game-modes/ffa-lifecycle.md) | Match state, spawning, possession/control, death, respawn and completion; interface evidence and gaps |
+| [Team Objective maps](game-modes/team-objective-maps.md) | Staged TO match from a mod: stage chain, victory stages, per-stage spawns, objectives verified in game, untested parts |
+
+### [Editor and scripting](editor-and-scripting/README.md)
+
+Automating the UE 4.25.4 editor, authoring Blueprints from scripts, and cheap checks before expensive runs.
+
+| Page | Contents |
+| --- | --- |
+| [Editor automation](editor-and-scripting/editor-automation.md) | Launch modes, hidden launches, resident editor, Python limitations and saved-state checks |
+| [Blueprint authoring](editor-and-scripting/blueprint-authoring.md) | Graph semantics, SDK stubs and shipping behavior |
+| [Preflight checks](editor-and-scripting/preflight-checks.md) | Cheap-first check ladder before editor runs and cooks; UE 4.25 behaviours that broke runs, with workarounds |
+
+### [Visuals and audio](visuals-and-audio/README.md)
+
+Lighting, materials, reflections and sound in the shipping game.
+
+| Page | Contents |
+| --- | --- |
+| [Lighting and materials](visuals-and-audio/lighting-and-materials.md) | Static-lighting usage flags, baking and material pitfalls |
+| [Mirrors and captures](visuals-and-audio/mirrors-and-captures.md) | Reflection techniques, performance and telemetry |
+| [Mod audio](visuals-and-audio/mod-audio.md) | Mod sounds and the volume sliders: Wwise bank rule, packing, licence caveat, SoundMix fallbacks |
+
+### [Packaging and hosting](packaging-and-hosting/README.md)
+
+Cooking, packing, installing and publishing a mod; running a server.
+
+| Page | Contents |
+| --- | --- |
+| [Cook and package](packaging-and-hosting/cook-and-package.md) | Fresh output, dependency closure, archive checks, loose files, library/map split, publishing format and installation |
+| [Server hosting](packaging-and-hosting/server-hosting.md) | Setup sequence and version-specific travel pitfalls |
+
+### [Game research](game-research/README.md)
+
+Reading game data and reviewing PAKs without changing the game.
+
+| Page | Contents |
+| --- | --- |
+| [Game data research](game-research/game-data-research.md) | Inheritance, ability tables and animation evidence |
+| [PAK review](game-research/pak-review.md) | Static findings versus actual runtime behavior |
+
+### [CMW conversion](cmw-conversion/README.md)
+
+Staged UE3 → UE4 conversion of Chivalry: Medieval Warfare maps: source collection, geometry and collision, materials and environment, light maps, completion rules, packaging and verification.
+
+### Repository files
+
+- [Agent index](AGENT-INDEX.md): task → page routing.
+- [Contributing](CONTRIBUTING.md): public-content boundary, evidence requirements, folder layout.
+- [License](LICENSE): CC BY 4.0.
 
 ## Public starting points
 
