@@ -27,8 +27,12 @@ Inherited component overrides can depend on `VariableGuid`; a reconstructed pare
 
 `Print String` and editor Kismet-event console calls are not dependable shipping features. Use a visible gameplay checkpoint, `Show Local Chat` where available, or deliberate SaveGame telemetry.
 
-## User enums
+## User enums and structs
 
-Nativization can omit user enums needed by a mod. In the tested setup, excluding the enum asset under `[BlueprintNativizationSettings]` with `+ExcludedAssets` in `DefaultEditor.ini`, then recooking, preserved it. Confirm the exact setting for your project and require the enum's cooked files in the actual PAK listing.
+Nativization can omit user-defined enums and structs needed by a mod. With the ArgonSDK project setting `BlueprintNativizationMethod=Exclusive`, a cook converts every user-defined enum and struct to C++ unless it is excluded: the "only selected assets" rule applies to Blueprints only (UE 4.25 `BlueprintNativeCodeGenModule.cpp`). The converted asset is missing from the cooked content while your Blueprints still import it, and the cook still reports success.
+
+Fix: list each asset under `[BlueprintNativizationSettings]` as `+ExcludedAssets=/Game/Mods/<YourMod>/<Path>/<AssetName>` in `DefaultEditor.ini`, then recook. Use one line per asset; `ExcludedFolderPaths` only applies to Blueprint classes. Then require the type's cooked `.uasset`/`.uexp` in the actual PAK listing.
+
+Evidence: enums at package level (found when a mod's archive lacked them; the exclusion restored them); structs at package level in a dedicated A/B cook (UE 4.25.4): an excluded struct and enum were cooked and packed, while non-excluded controls were converted to C++ and absent from the PAK although the holder Blueprint still imported them. The struct case was not loaded in game. Source caveat: an excluded asset can still be converted if it has a circular reference with a converted asset.
 
 Save enum assets explicitly. Python name normalization and default ordering can differ from display labels; verify the saved value rather than assigning an arbitrary integer.
