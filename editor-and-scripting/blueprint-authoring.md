@@ -28,6 +28,8 @@ Reconstructed game Blueprints can be stubs with empty functions or missing compo
 
 Inherited component overrides can depend on `VariableGuid`; a reconstructed parent GUID that differs from the game's can cause a child override to be ignored. Placed-instance overrides behaved differently and need their own verification.
 
+Do not call the engine's `Get All Actors With Tag` from Gameplay Statics (`GameplayStatics::GetAllActorsWithTag`) in a Chivalry 2 mod Blueprint. In our tests it crashed the shipping game every time it ran (an access violation, the same address in every crash): a few seconds after a trigger when called during play, and in the loading screen when called on BeginPlay. A pad that ran only this node, with nothing else, crashed as well. Use the game's own `Get All Actors With Tag` from `TBLSystemLibrary`, which has the same pins and is the only tag lookup the shipped level scripts use. With it, grouped HUD markers (`MultiActorHUDMarker`) mark placed and runtime-spawned actors without trouble, through `AddMarkedActor` or the server call `AuthoritySetMarkedActors`. Finding actors by class (`Get All Actors Of Class`) was not affected.
+
 `Print String` and editor Kismet-event console calls are not dependable shipping features. Use a visible gameplay checkpoint, `Show Local Chat` where available, or deliberate SaveGame telemetry.
 
 ## User enums and structs
