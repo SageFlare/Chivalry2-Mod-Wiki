@@ -53,7 +53,7 @@ One player, local Unchained match, shipping game; retail behaviour read from the
   behaviours: they are likely one shared instance per faction. Retail steers bots per stage with `DestinationGeneratorVolume`s tagged
   per faction.
 - **A capture that is only part of a stage needs its own bottom bar.** Retail links a capture's bar to the stage only when the capture
-  is the whole stage. Showing the capture's own contribution kept the tower bar from moving with unrelated kills.
+  is the whole stage. Showing the capture's own contribution stopped its bar from moving with score from the stage's other objectives.
 - **Live health for a one-breakable stage = the stage bar.** Retail sets the stage score from the target's health on each hit
   (`trunc((1 - health %) x 1000)`), capped one below the maximum; the kill completes the stage. The bar you see while aiming at a
   breakable may lag until you look away and back, in retail maps as well.
