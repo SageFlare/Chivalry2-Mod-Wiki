@@ -41,9 +41,49 @@ Spawn retail objective Blueprints (capture areas, breakables, weapon racks, sieg
 
 Capture-area tuning lives on its `TeamCapturePointComponent` (`SetTeamCapturePointProperties`: tick interval, capture/neutralize time, players needed, allowed factions, auto-neutralize, immunity times). This is static evidence from SDK declarations and retail data; retail defaults are not the SDK stub values. In a single-player probe the area kept scoring for its owner after everyone left; static evidence suggests auto-neutralize was missing (untested); retail maps inspected enable auto-neutralize with zero immunity. Re-test before relying on any of these settings.
 
+## More objective mechanics (verified in game, 2026-11-12 to 11-15)
+
+One player, local Unchained match, shipping game; retail behaviour read from the game's own Blueprints and data.
+- **Bots follow AI tags, not move orders.** A retail `BaseCaptureArea` AI-tags itself for all factions when activated
+  (`bAutoAITag`, default true), and the CapturePoint behaviour then pulls every bot, defenders included, into the area. A periodic
+  `MoveToLocation` loses to the bot's own decisions (retail level scripts never call it). Bots that must hold a post stayed there
+  once the area was tagged for the attacking faction only (`bAutoAITag` false, then `TBLAILibrary.AITagActor(area,
+  AI.ObjectiveActor.CapturePoint, attacking faction)`, untagged when its stage ends) and their own base behaviours
+  (`B_WalkAroundObjectives`, `B_GoToCombatZoneSafeSpot`, `B_RevivePlayer`) were weighted 0. Never change tag or item override
+  behaviours: they are likely one shared instance per faction. Retail steers bots per stage with `DestinationGeneratorVolume`s tagged
+  per faction.
+- **A capture that is only part of a stage needs its own bottom bar.** Retail links a capture's bar to the stage only when the capture
+  is the whole stage. Showing the capture's own contribution kept the tower bar from moving with unrelated kills.
+- **Live health for a one-breakable stage = the stage bar.** Retail sets the stage score from the target's health on each hit
+  (`trunc((1 - health %) x 1000)`), capped one below the maximum; the kill completes the stage. The bar you see while aiming at a
+  breakable may lag until you look away and back, in retail maps as well.
+- **Who may take torches and burn:** retail limits both sides with literal factions. The fire pit's weapon rack gets
+  `SetUseableByTeam(faction)` and hands out a faction torch (`Carryable_Torch_AgathaOnly` / `_MasonOnly`, which the other faction
+  cannot pick up), and the target gets `StatsComponent.SetAllowedDamagingFaction(faction)`. In game: defenders got no torch and could
+  not damage tents or the barricade; attackers could. Retail burn markers filter on the exact torch class. Faction getters at
+  BeginPlay are untested; pass literal factions as retail maps do.
+- **Moving-objective sounds:** post the Play / Stop pair of a looping move sound on a persistent `AkComponent` of the moving actor
+  (`AkComponent.PostAkEventByName`; `PostAkEvent` does not compile against the SDK stub unless its callback pins are wired). Posting
+  by name on the actor and stopping with `StopActor` played only on the first push.
+- **Objective banners without chat:** `BroadcastLocalizedObjectiveMessage` with only `HeaderMessage` filled shows the on-screen banner
+  and writes nothing to chat.
+- **Moving objectives do not push players by themselves.** UE 4 has no UE3-style mover push: a cart moved without sweep passes
+  through a player standing still, and a `PushingComponent` alone does nothing on a plain actor (it needs a driver such as a
+  `PushableComponent` or character movement). Retail moving objectives use the native `PushableComponent` on a `PushableSplineActor`
+  track. Partial probe: configuring it at stage start with `ReConfigurePushable` (full properties struct, as retail Bulwark does)
+  made it move and award push score; values saved only on a placed instance did not (values equal to the SDK stub defaults are not
+  saved); after `ReversePushableByDistance` it could not be pushed again without more calls (not solved yet).
+
 ## Authoring limits (UE 4.25 Python)
 
 Editor Python in 4.25 cannot add an interface to a Blueprint or reach the level script Blueprint. Do those steps by hand in the editor or through your own editor C++ module. `GetActorOfClass` is impure in 4.25; unwired exec pins get it pruned. Compile every Blueprint, including the level Blueprint, and re-validate the saved map in a fresh editor process. See [Editor automation](../editor-and-scripting/editor-automation.md).
+
+## Shipping shared objective pieces
+
+Never ship the same asset path in two mod PAKs (the last mounted wins, so one map gets the other's version). For a release, copy shared
+objective Blueprints under the map's own folder and point the map at the copies (byte copy keeps user-struct member GUIDs; redirect
+for one editor session and re-save; save user structs by path, the generic loaded-asset save refuses them), then scan the cooked
+files for any reference to the shared folder.
 
 ## Shared objective pieces (proposal)
 

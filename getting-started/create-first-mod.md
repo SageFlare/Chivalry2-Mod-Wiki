@@ -11,7 +11,7 @@ Create assets directly beneath `<ProjectRoot>/Content/Mods/AgMods/ExampleMod`. T
 ## Actor and marker
 
 1. Create a Blueprint subclass of `ArgonSDKModBase` named `ExampleMod` in that folder.
-2. Create a `DA_ModMarker` data asset and add the actor class to its Mod Actors collection. Save both assets.
+2. Create a `DA_ModMarker` data asset and add the actor class to its Mod Actors collection. Save both assets. (Newer Unchained-Mods also has `DA_ModMarker_V2` with `ModActorClasses`, `ModId` and `ModVersion`; V1 markers still work, and V2 wins for the same class. The launcher shows a PAK's version from the V2 `ModVersion`.)
 3. For a local display experiment, allow offline loading and clientside execution; do not enable frontend-only or host-only behavior unintentionally. Review the loader flags in your SDK version.
 4. In BeginPlay, preserve the parent call and invoke `Show Local Chat` with a distinctive message.
 5. Compile and save. Reopen in a fresh editor process before packaging.

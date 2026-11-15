@@ -58,7 +58,16 @@ Default bots roam only toward destination points tagged `AI.DestinationVolume` (
 
 ## Not possible from a map
 
-- The loading-screen image: the game's loading-screen config lists only official maps, so custom maps get the default image.
+- The loading-screen image, without the UnchainedPlugin 1.0.0-rc4 route below: the game's loading-screen config lists only official maps, so custom maps get the default image. Never replace that config (it clashes with Unchained-Mods).
+
+## Loading screen per map (UnchainedPlugin 1.0.0-rc4 and later, verified in game)
+
+- Put a `DA_MapMarker_V2` data asset (class from Unchained-Mods, `/Game/Mods/ArgonSDK/Mods/ModLoading/v2/`) in your mod folder. Each row of `Maps` (`F_ShippedMap`) names a map, its `LoadingScreen` texture, `MapName` (title) and `MapDescription` (subtitle); `DefaultLoadingScreen` is the fallback. A row without any texture injects nothing, not even the title.
+- The plugin matches rows by map short name (case-insensitive, first marker wins), so map names must be unique across mods.
+- Reference the Unchained-Mods classes; never ship copies of `/Game/Mods/ArgonSDK/**` in your PAK. Exclude the marker's structs (`F_ShippedMap`, `E_MapShipState`) from Blueprint nativization when cooking.
+- With ArgonSDK including the ArgonSDKTooling plugin, the marker can be created by script (`mapmarker.create_map_marker(<folder>)`) and its title / subtitle fill themselves from the map's world settings `MapName` / `MapDescription` (map-summary tags, set before saving the map).
+- Retail loading textures are 1920x1080, DXT1, one mip, `NeverStream`.
+- Players on older plugin versions see the default image.
 - Prologue length or start wait per map (game Blueprint and config).
 
 Other modes follow the same pattern: a `Settings_<Mode>` instance, the mode's stage class and the same cinematic states. Check that mode's official maps first. Staged objective matches are covered in [Team Objective maps](team-objective-maps.md).
