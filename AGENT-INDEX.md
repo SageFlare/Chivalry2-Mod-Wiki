@@ -23,7 +23,7 @@ Repository root holds only this index, the [README](README.md), [CONTRIBUTING](C
 | [editor-and-scripting/](editor-and-scripting/README.md) | editor automation, Blueprint authoring from scripts, preflight checks and UE 4.25 limits |
 | [visuals-and-audio/](visuals-and-audio/README.md) | lighting and materials, mirrors and captures, mod audio |
 | [packaging-and-hosting/](packaging-and-hosting/README.md) | cook, package, install, publish; server hosting |
-| [game-research/](game-research/README.md) | read-only game data research, PAK review |
+| [game-research/](game-research/README.md) | read-only game data research, retail map scripts, PAK review |
 | [cmw-conversion/](cmw-conversion/README.md) | converting Chivalry: Medieval Warfare (UE3) maps |
 
 ## Route a task
@@ -35,7 +35,7 @@ Repository root holds only this index, the [README](README.md), [CONTRIBUTING](C
 | Official-style FFA match | [FFA map setup](game-modes/ffa-map-setup.md) | [FFA lifecycle](game-modes/ffa-lifecycle.md) | world settings, kill cap, `ScoredStage`, start timing, bot roaming, cinematics |
 | Spawns, respawn waves, bots | [Spawns and navigation](game-modes/spawns-and-navigation.md) | [FFA map setup](game-modes/ffa-map-setup.md) | `GroupSpawner`, `SpawnSequence`, waves, startup, navigation |
 | How an FFA match runs (game state, possession, death) | [FFA lifecycle](game-modes/ffa-lifecycle.md) | [Spawns and navigation](game-modes/spawns-and-navigation.md) | readiness, queuers, possession, respawn, match end |
-| Team Objective map | [Team Objective maps](game-modes/team-objective-maps.md) | [Spawns and navigation](game-modes/spawns-and-navigation.md) | `StagedGameMode`, stage chain, victory stage, per-stage spawns, capture area, escort |
+| Team Objective map | [Team Objective maps](game-modes/team-objective-maps.md) | [Spawns and navigation](game-modes/spawns-and-navigation.md) | `StagedGameMode`, stage chain, victory stage, per-stage spawns, retail spawn switch, forward spawning, wave intervals, `MinRespawnDelay`, capture area, escort |
 | Script the editor (Python, commandlets) | [Editor automation](editor-and-scripting/editor-automation.md) | [Preflight checks](editor-and-scripting/preflight-checks.md) | headless, hidden launch, resident editor, Python 2.7 API gaps, saved state |
 | Avoid wasted editor runs / UE 4.25 limits | [Preflight checks](editor-and-scripting/preflight-checks.md) | [Editor automation](editor-and-scripting/editor-automation.md) | lint, compile, canary, review, engine behaviour table |
 | Blueprints from scripts or SDK stubs | [Blueprint authoring](editor-and-scripting/blueprint-authoring.md) | [Editor automation](editor-and-scripting/editor-automation.md) | graph rules, construction script, cold compile, user enums and structs, nativization, `+ExcludedAssets` |
@@ -45,6 +45,7 @@ Repository root holds only this index, the [README](README.md), [CONTRIBUTING](C
 | Cook, package, install, publish | [Cook and package](packaging-and-hosting/cook-and-package.md) | [PAK review](game-research/pak-review.md) | cook scope, dependencies, loose files, library PAKs, install, registry `mod.json` v1 |
 | Review a PAK (content vs runtime) | [PAK review](game-research/pak-review.md) | [Cook and package](packaging-and-hosting/cook-and-package.md) | archive inventory, asset shadowing, runtime evidence, SaveGame files, slot names |
 | Read game data (no game changes) | [Game data research](game-research/game-data-research.md) | [Blueprint authoring](editor-and-scripting/blueprint-authoring.md) | inheritance, ability tables, animation timing |
+| Read a retail map's level script / placed actors | [Reading retail map scripts](game-research/level-script-research.md) | [Team Objective maps](game-modes/team-objective-maps.md) | CUE4Parse, FModel, `ReadScriptData`, ubergraph, bytecode, `Delay` resume, flow stack, actor positions, spawner slots |
 | Host a server / travel problems | [Server hosting](packaging-and-hosting/server-hosting.md) | | baseline, version-specific travel |
 | Convert a Chivalry: Medieval Warfare (UE3) map | [CMW conversion](cmw-conversion/README.md) | [Passes and release](cmw-conversion/workflow.md) | collection, base conversion, completion, objective setup, release |
 | CMW meshes, BSP, terrain, collision | [Geometry and collision](cmw-conversion/geometry-and-collision.md) | [Tools and evidence](cmw-conversion/tools-and-evidence.md) | LODs, compiled BSP, terrain, hulls, volumes |

@@ -2,7 +2,7 @@
 
 These findings concern the inspected Chivalry 2 data and exporter versions. They do not establish current exporter support for every asset.
 
-Use a public parser such as CUE4Parse or an asset viewer such as UModel with version settings appropriate to the game. Keep installed packages read-only and write exports elsewhere. Record package/tool hashes and effective mount order: extra mod PAKs can override the data you think you are examining.
+Use a public parser such as CUE4Parse or an asset viewer such as UModel with version settings appropriate to the game. Maps and level scripts: [Reading retail map scripts](level-script-research.md). Keep installed packages read-only and write exports elsewhere. Record package/tool hashes and effective mount order: extra mod PAKs can override the data you think you are examining.
 
 ## Resolve inheritance
 

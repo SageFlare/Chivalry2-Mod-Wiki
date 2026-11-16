@@ -29,6 +29,30 @@ Observed in game: the objective bar follows the current stage, time is added on 
 - First stage: one placed `SpawnSequence` per faction, holding that faction's GroupSpawner, activated on the server from the first stage's `On Started`.
 - Later stages, as retail maps do it: on the stage's `On Started` (server), `Deactivate` the old attacker sequence, spawn a new `SpawnSequence` (collision handling: always spawn), `Initialize` it with the forward GroupSpawner, faction and wave settings, then `Activate`. Verified: after stage 1 the attacker respawned at the forward spawners.
 
+### How retail maps move spawns (static evidence)
+
+Read from one retail Team Objective map's level script and placed actors, plus game-mode defaults; a wider static audit saw the same deactivate, spawn, initialize, activate shape on all retail Team Objective maps. None of this was tested in game. Method: [Reading retail map scripts](../game-research/level-script-research.md).
+
+For one faction, a retail spawn change:
+
+1. Deactivates every `SpawnSequence` of that faction.
+2. Spawns, initializes and activates the new sequence. Respawning players use the new spawners at once.
+3. Activates the faction's new combat-zone boundary volumes and deactivates the old ones.
+4. Waits: 15 s for defenders, 30 s for attackers on the inspected map (20 s for some last-stage defender sets).
+5. Deactivates the faction's old out-of-combat (spawn safe) zones and calls `StartForwardSpawning` on a dedicated forward spawner with every character of that faction still out of combat, moving players who stayed in the old spawn room.
+
+The wait is a grace period before that move, not a delay before the new spawns go live. Most stages switch both factions when the stage starts; some switch the attackers 15 or 30 s later. Mid-stage switches come from trigger volumes or objective events.
+
+Observed settings:
+
+- Every sequence: one simultaneous wave, looping, always keep one wave active, fast first spawn, wave timing set to half of the interval (effect is native), no wave parameter overrides. Intervals: attackers 5-10 s, defenders 7-20 s.
+- Intervals change at runtime with `SetSecondsBetweenWaves`. On a capture stage: at the start attackers 10 s / defenders 14 s; after the attackers capture, 9 / 11 s; after the defenders retake, 5 / 13 s; with two minutes left the defender interval becomes 20 s.
+- `StagedGameMode`: `MinRespawnDelay` 3 s (FFA mode: 5 s). Its seconds-between-waves player-count curve adds 0 s at 0 players, 1.25 s at 32, 2.5 s at 48 and 5 s at 64; whether it applies when a sequence passes no curve was not established.
+- Run-in spawners: 3 s prespawn, 3 s autorun sprint, 1.75 s before vulnerable. Retail spawners mostly have 4 x 2 slots.
+- Cavalry uses separate spawners, started on a timer and only when horses are enabled for the match.
+
+How interval, half timing, minimum respawn delay and prespawn combine into a player's actual wait is native behaviour; measure it before copying values.
+
 ## Objectives verified in game
 
 - **Bar text:** on each stage's `On Started` (server), `TBLGameState.SetObjectiveContextText` with a message per faction and `IsValid` set, as the inspected retail TO map does. Without it the bar had no title.

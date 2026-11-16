@@ -26,7 +26,7 @@ How matches, spawns and objectives work, and how a map sets them up.
 | [FFA map setup](game-modes/ffa-map-setup.md) | Official-style FFA: world settings, message table, kill cap, start timing, bot roaming, cinematics, map limits |
 | [Spawns and navigation](game-modes/spawns-and-navigation.md) | Respawn waves, match startup and intended routes |
 | [FFA lifecycle](game-modes/ffa-lifecycle.md) | Match state, spawning, possession/control, death, respawn and completion; interface evidence and gaps |
-| [Team Objective maps](game-modes/team-objective-maps.md) | Staged TO match from a mod: stage chain, victory stages, per-stage spawns, objectives verified in game, untested parts |
+| [Team Objective maps](game-modes/team-objective-maps.md) | Staged TO match from a mod: stage chain, victory stages, per-stage spawns, how retail maps move spawns, objectives verified in game, untested parts |
 
 ### [Editor and scripting](editor-and-scripting/README.md)
 
@@ -64,6 +64,7 @@ Reading game data and reviewing PAKs without changing the game.
 | Page | Contents |
 | --- | --- |
 | [Game data research](game-research/game-data-research.md) | Inheritance, ability tables and animation evidence |
+| [Reading retail map scripts](game-research/level-script-research.md) | Exporting a retail map's level script and placed actors; reading ubergraph bytecode; positions and spawner slots |
 | [PAK review](game-research/pak-review.md) | Static findings versus actual runtime behavior |
 
 ### [CMW conversion](cmw-conversion/README.md)
