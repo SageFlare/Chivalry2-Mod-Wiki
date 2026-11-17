@@ -20,6 +20,8 @@ The inspected loader resolves an enabled mod actor by the convention `/Game/Mods
 
 ## Iterate
 
+Older guides package with the SDK's Python script `Content/Python/build.py` or the `ModPackerWidget` that wraps it. The November 2026 ArgonSDK update removed that script and replaced it with the ArgonSDKTooling plugin; use the tooling your SDK version ships. The inspected old script could launch the cook twice and did not pass on UnrealPak failures, so a direct cook command with an exit-code check is a dependable fallback.
+
 Follow [cook and package](../packaging-and-hosting/cook-and-package.md), ensuring the actor, marker and required companions are included. Install into the game installation used by Unchained, enable the mod through the version-appropriate loading controls, and enter a match. Check the message, change it, rebuild and verify that the new message appears.
 
 `Print String` is unsuitable as the sole shipping-game checkpoint. A successful editor preview does not establish discovery, packaging or runtime execution.

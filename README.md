@@ -26,7 +26,7 @@ How matches, spawns and objectives work, and how a map sets them up.
 | [FFA map setup](game-modes/ffa-map-setup.md) | Official-style FFA: world settings, message table, kill cap, start timing, bot roaming, cinematics, map limits |
 | [Spawns and navigation](game-modes/spawns-and-navigation.md) | Respawn waves, match startup and intended routes |
 | [FFA lifecycle](game-modes/ffa-lifecycle.md) | Match state, spawning, possession/control, death, respawn and completion; interface evidence and gaps |
-| [Team Objective maps](game-modes/team-objective-maps.md) | Staged TO match from a mod: stage chain, victory stages, per-stage spawns, how retail maps move spawns, objectives verified in game, untested parts |
+| [Team Objective maps](game-modes/team-objective-maps.md) | Staged TO match from a mod: stage chain, victory stages, per-stage spawns, how retail maps move spawns, objectives verified in game, native pushables, siege hits, player score events, untested parts |
 | [One art level for several modes](game-modes/shared-art-level.md) | One art level streamed by an FFA map and a TO map in one PAK: engine rules, soft references, Movable copies, packaging |
 $R
 
@@ -37,7 +37,7 @@ Automating the UE 4.25.4 editor, authoring Blueprints from scripts, and cheap ch
 | Page | Contents |
 | --- | --- |
 | [Editor automation](editor-and-scripting/editor-automation.md) | Launch modes, hidden launches, resident editor, Python limitations and saved-state checks |
-| [Blueprint authoring](editor-and-scripting/blueprint-authoring.md) | Graph semantics, SDK stubs and shipping behavior |
+| [Blueprint authoring](editor-and-scripting/blueprint-authoring.md) | Graph semantics, saved instances, objective markers, SDK stubs, user structs and shipping behavior |
 | [Preflight checks](editor-and-scripting/preflight-checks.md) | Cheap-first check ladder before editor runs and cooks; UE 4.25 behaviours that broke runs, with workarounds |
 
 ### [Visuals and audio](visuals-and-audio/README.md)
@@ -56,7 +56,7 @@ Cooking, packing, installing and publishing a mod; running a server.
 
 | Page | Contents |
 | --- | --- |
-| [Cook and package](packaging-and-hosting/cook-and-package.md) | Fresh output, dependency closure, archive checks, loose files, library/map split, publishing format and installation |
+| [Cook and package](packaging-and-hosting/cook-and-package.md) | Fresh output, dependency closure, archive checks, loose files, library/map split, how Unchained treats hand-installed PAKs, publishing format and installation |
 | [Server hosting](packaging-and-hosting/server-hosting.md) | Setup sequence and version-specific travel pitfalls |
 
 ### [Game research](game-research/README.md)

@@ -94,9 +94,62 @@ One player, local Unchained match, shipping game; retail behaviour read from the
 - **Moving objectives do not push players by themselves.** UE 4 has no UE3-style mover push: a cart moved without sweep passes
   through a player standing still, and a `PushingComponent` alone does nothing on a plain actor (it needs a driver such as a
   `PushableComponent` or character movement). Retail moving objectives use the native `PushableComponent` on a `PushableSplineActor`
-  track. Partial probe: configuring it at stage start with `ReConfigurePushable` (full properties struct, as retail Bulwark does)
-  made it move and award push score; values saved only on a placed instance did not (values equal to the SDK stub defaults are not
-  saved); after `ReversePushableByDistance` it could not be pushed again without more calls (not solved yet).
+  track.
+
+## Native pushables (verified in game, 2026-11-16)
+
+One player, local Unchained match, UnchainedPlugin 1.0.0. Setup: the native `PushableComponent` on your own Blueprint, with a track
+that is your own Blueprint child of the native `PushableSplineActor`.
+
+- **Configure it at stage start** with a full `ReConfigurePushable` (properties struct, spline, end points, time), as retail Bulwark
+  does, then `ResetProgress(0)`, `ActivatePushable(True)` and `ProceedToNextEndPoint`. A configuration saved only on the placed or
+  template component never moved, even with `ResetProgress(0)` first (values equal to the SDK stub defaults are not saved at all).
+- Configured that way it moved within about a second when an attacker entered its zone, slowed and stopped when they left, halted
+  and resumed at end points, and finished.
+- **It pushes a player standing still in its path out of the way**, which a hand-moved cart does not do.
+- After `ReversePushableByDistance` it rolled back; once an attacker left the zone and came back, it moved forward again.
+- A defender NPC (a spawned AI kill target) in the zone did not contest it. Bot and player defenders were not tested.
+- Push score pop-ups appeared.
+
+## Siege hits on breakables (verified in game, 2026-11-16)
+
+Targets with a `StatsComponent`, hit by the retail catapult and ballista spawned at runtime:
+
+- Every catapult rock and ballista bolt reported the damage source `RangedDamage`, not `SiegeDamage`. Damage causer = the engine
+  (`Catapult_C`, `Ballista_C`), instigator = the player pawn, projectile `Carryable_CatapultRock_C` / `Ammo_BallistaBolt_C`, ability
+  row `ShootCatapult` / `ShootBallista`. A rock did 3000 per hit, a bolt 100. To react to one engine only, filter on the damage causer
+  class, projectile or ability row, not on the damage source.
+- `bDisableProjectileDamage` blocked rocks, bolts and thrown player weapons. Adding `bEnableSiegeDamage` let the siege-engine
+  projectiles through again while thrown weapons stayed blocked; melee still hit. `bEnableSiegeDamage` alone changed nothing.
+- `AllowedDamageSource` = `[SiegeDamage]` blocked every hit tested (melee, throws, rocks, bolts). Do not use it for catapult targets;
+  which weapons do deal `SiegeDamage` (rams?) is unknown.
+- A `HitWorld` tag on the target made no difference.
+- The retail catapult and ballista classes face their local +X axis.
+
+## Player score events (verified in game, 2026-11-16)
+
+Player score (the points pop-ups and scoreboard) is separate from the stage score (`AddScore`). Retail objectives award it from one
+data table, `/Game/GameModes/GameScoringInfo/GameScoringDataTable` (not in the SDK, so award by row name). Two retail calls do it:
+`TBLSystemLibrary.AwardScoreToPlayers(players, RowName, ...)` pays the row's value, and a `TBLGameScoringComponent.AwardScore`
+(override -1 = row value) pays from the component's row. Retail never calls `AwardOverrideScoreToPlayer`.
+
+Retail rows and points in Team Objective (static evidence from the table and retail Blueprints):
+
+| Event | Row (points) | Retail mechanism |
+| --- | --- | --- |
+| Set fire to a burnable | `Obj_BurningApplied` (100), once | burnable component, first flammable hit, to the torch holder |
+| Damage a gate or barricade | `Obj_BreakableDamaged_Percent` (50; `_25`, `_10` variants) | per hit: trunc(points / 100 x damage) to the damage instigator; crates have it off |
+| Capture | `Obj_Capture_IntervalBonus` (10) every 2 s, plus a captured bonus | native, when the capture area's `bAwardCaptureInterval`, `CaptureIntervalScoreInterval` and `bAwardScoreWhenCaptured` are set |
+| Push a pushable | `Obj_PushableBonus` (10) per interval, `Obj_PushableCompleteBonus` (200) | native pushable |
+| Kill a noble / NPC | `Obj_NobleKilled` (100), `Obj_KillNPC` (50) | native |
+| Other | `TowerDestroyed`, `WagonDestroyed` (100), `LootSecured` (75), `ConstructionEvent` (250), `RaiseLowerConstruction` (50), `StructureDestroyed` (50) | level scripts or the using player |
+| Stage and match | `Obj_StageCompleteBonus` (200), `Match_WinBonus` (750), `Match_LossBonus` (300) | native |
+
+Checked in game with objectives built from your own Blueprints: points for burning tents (torch holder, once), pushing a hand-made
+cart (an interval award while it moves, a completion award at the end), damaging a barricade per hit, capturing an area spawned at
+runtime with the capture-award flags set before activation, and killing an AI target (one 100-point noble kill, no second native award).
+Stage and match bonuses came from the game itself; do not add them again. Award only on the server, only while the objective's stage
+runs, and only to players of the intended faction.
 
 ## Authoring limits (UE 4.25 Python)
 

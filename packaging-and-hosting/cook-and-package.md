@@ -58,6 +58,21 @@ Install only into a confirmed game installation selected for testing. Wait for t
 
 Record the installed version and rollback artifact privately. Test loading and intended behavior in the shipping game; archive integrity cannot establish runtime compatibility.
 
+## How Unchained treats hand-installed PAKs
+
+Source inspection of Unchained Launcher 1.0.2, UnchainedPlugin 1.0.0-rc4 and Unchained-Mods 0.2.2 (November 2026), plus the in-game observations marked below. Check the versions your players run.
+
+- **Launcher prompt:** at launch the launcher hashes every `*.pak` in the `Paks` root except `pakchunk0-WindowsNoEditor.pak` and asks about each PAK it does not manage ("Unmanaged Mods detected"). **Keep** is remembered per file name and hash, so every rebuild asks again; **Remove** deletes the `.pak` and its `.sig`; **Cancel** aborts the launch. The `always_keep_unmanaged_paks` setting skips the prompt.
+- **Duplicates:** byte-identical PAKs in the root are deleted without asking, together with their `.sig`, unless the `.sig` files differ. Keep one copy of each build.
+- **Adoption:** choosing Keep on a PAK whose hash matches a registered release makes it launcher-managed.
+- **Do not park PAKs in `Saved/Paks` folders** (`TBL/Saved/Paks`, `%LOCALAPPDATA%/Chivalry 2/Saved/Paks` or `Saved_<suffix>/Paks`): the launcher moves `.pak` and `.sig` files from there into the game's `Paks` folder.
+- **Subfolders of `Paks`:** UE 4.25 mounts PAKs recursively, and library PAKs in a subfolder loaded in game. The plugin registers every mounted PAK, subfolders included. The launcher never prompts about, deletes or scans subfolder PAKs, so their mod actors and maps do not appear in its server configuration; keep map PAKs in the root.
+- **Names and mounting:** the plugin drops PAKs named `pakchunk*` from mod discovery and excludes a PAK that fails to mount (for example a bad `.sig`; its log then says `mount failed (excluded)`).
+- **Discovery cost:** a mod PAK may carry a `ModAssetRegistry.bin` under its `Content/Mods/` folder, which the plugin merges directly. Without one, the plugin parses the header of every `.uasset` in that PAK once at startup, which matters for large libraries.
+- **Shown version:** the `ModVersion` of a `DA_ModMarker_V2`, else the mod actor's `ModVersion`, else "Unknown".
+- **Paths Unchained-Mods replaces:** `CampaignFrontendTracker`, `LoadingScreensConfig` and `AIPersonalities` under `/Game`. Mod PAKs must not ship those paths, nor copies of `/Game/Mods/ArgonSDK/**`.
+- **Load delay (in game):** Unchained-Mods 0.2.0 rescanned `/Game/Mods` synchronously on every map load, so the delay grew with the number of installed mod assets (about 32 s with a large library). Version 0.2.2 rescans only when nothing is registered yet; the same setup then loaded in 1-2 s.
+
 ## Registry publishing format (v1)
 
 Documentation and source inspection, October 2026: see [C2ModRegistry](https://github.com/Chiv2-Community/C2ModRegistry), the [mod setup docs](https://github.com/Chiv2-Community/zero-infra-mod-registry/blob/v1/docs/mod/README.md) and schema `schemas/mod.schema.json`, and the optional [ModTemplate](https://github.com/Knutschbert/ModTemplate). Older publishing guides predate this format.
