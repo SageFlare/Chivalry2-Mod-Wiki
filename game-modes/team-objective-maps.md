@@ -110,7 +110,7 @@ that is your own Blueprint child of the native `PushableSplineActor`.
 - After `ReversePushableByDistance` it rolled back; once an attacker left the zone and came back, it moved forward again.
 - A defender NPC (a spawned AI kill target) in the zone did not contest it. Bot and player defenders were not tested.
 - Push score pop-ups appeared.
-- **A long converted route works too (2026-11-17):** a 9 km-unit track built from an old map's path (a spline point at least every
+- **A long converted route works too (2026-11-17):** a track of about 9,200 units (92 m) built from an old map's path (a spline point at least every
   50 units, the path lifted to the terrain, `TimeToComplete` = path length / original speed) moved a caravan with attached wagon,
   crates and spinning wheels over slopes to the end and completed the stage. It floated slightly in places (a per-map touch-up).
 
