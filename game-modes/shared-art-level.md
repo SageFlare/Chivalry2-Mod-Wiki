@@ -2,7 +2,7 @@
 
 How one map's art can be stored once and used by an FFA map and a Team Objective (TO) map in the same mod PAK, the way retail Chivalry 2 shares `Courtyard_Art` between its FFA, TDM, LTS and Arena maps. FFA setup is covered in [FFA map setup](ffa-map-setup.md) and the staged match in [Team Objective maps](team-objective-maps.md).
 
-Evidence (UE 4.25.4 ArgonSDK, Unchained, 2026-11-12 to 2026-11-17). Engine rules were read in the UE 4.25 source and exercised in the editor. Packaging was checked by listing the cooked PAK. In the shipping game: a small probe map (listen server and one joined client), then a full converted map, whose FFA map and TO map both loaded from one PAK. Late join and dedicated servers were not tested separately. The TO map's first build showed a duplicated prop. Its cause is described under "Copies must match the original". The corrected build has not been tested in game yet.
+Evidence (UE 4.25.4 ArgonSDK, Unchained, 2026-11-12 to 2026-11-17). Engine rules were read in the UE 4.25 source and exercised in the editor. Packaging was checked by listing the cooked PAK. In the shipping game: a small probe map (listen server and one joined client), then a full converted map, whose FFA map and TO map both loaded from one PAK. Late join and dedicated servers were not tested separately. The TO map's first build showed a duplicated prop. Its cause is described under "Copies must match the original". The corrected build showed the prop once, as intended (in game, one player).
 
 ## Layout
 
