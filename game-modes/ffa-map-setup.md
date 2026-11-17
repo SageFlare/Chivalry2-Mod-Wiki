@@ -67,6 +67,8 @@ Default bots roam only toward destination points tagged `AI.DestinationVolume` (
 - Reference the Unchained-Mods classes; never ship copies of `/Game/Mods/ArgonSDK/**` in your PAK. Exclude the marker's structs (`F_ShippedMap`, `E_MapShipState`) from Blueprint nativization when cooking.
 - With ArgonSDK including the ArgonSDKTooling plugin, the marker can be created by script (`mapmarker.create_map_marker(<folder>)`) and its title / subtitle fill themselves from the map's world settings `MapName` / `MapDescription` (map-summary tags, set before saving the map).
 - Retail loading textures are 1920x1080, DXT1, one mip, `NeverStream`.
+- One marker can carry several maps of one mod (for example an FFA map and a TO map sharing an art level). A map that streams sublevels needs the marker's `ShippedMapLayers` updated (the tooling's "Update map layers"); its validation reports the layer as missing otherwise.
+- Checked in game with UnchainedPlugin 1.0.0 (two maps): the loading image shows, but no title or subtitle appears on the loading screen. The plugin writes the row's texts into loading-screen config fields whose on-screen use is unconfirmed. A title drawn into the image itself does show.
 - Players on older plugin versions see the default image.
 - Prologue length or start wait per map (game Blueprint and config).
 
