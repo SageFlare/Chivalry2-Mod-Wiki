@@ -96,38 +96,9 @@ One player, local Unchained match, shipping game; retail behaviour read from the
   `PushableComponent` or character movement). Retail moving objectives use the native `PushableComponent` on a `PushableSplineActor`
   track.
 
-## Native pushables (verified in game, 2026-11-16)
+## Pushables, rams and siege hits
 
-One player, local Unchained match, UnchainedPlugin 1.0.0. Setup: the native `PushableComponent` on your own Blueprint, with a track
-that is your own Blueprint child of the native `PushableSplineActor`.
-
-- **Configure it at stage start** with a full `ReConfigurePushable` (properties struct, spline, end points, time), as retail Bulwark
-  does, then `ResetProgress(0)`, `ActivatePushable(True)` and `ProceedToNextEndPoint`. A configuration saved only on the placed or
-  template component never moved, even with `ResetProgress(0)` first (values equal to the SDK stub defaults are not saved at all).
-- Configured that way it moved within about a second when an attacker entered its zone, slowed and stopped when they left, halted
-  and resumed at end points, and finished.
-- **It pushes a player standing still in its path out of the way**, which a hand-moved cart does not do.
-- After `ReversePushableByDistance` it rolled back; once an attacker left the zone and came back, it moved forward again.
-- A defender NPC (a spawned AI kill target) in the zone did not contest it. Bot and player defenders were not tested.
-- Push score pop-ups appeared.
-- **A long converted route works too (2026-11-17):** a track of about 9,200 units (92 m) built from an old map's path (a spline point at least every
-  50 units, the path lifted to the terrain, `TimeToComplete` = path length / original speed) moved a caravan with attached wagon,
-  crates and spinning wheels over slopes to the end and completed the stage. It floated slightly in places (a per-map touch-up).
-
-## Siege hits on breakables (verified in game, 2026-11-16)
-
-Targets with a `StatsComponent`, hit by the retail catapult and ballista spawned at runtime:
-
-- Every catapult rock and ballista bolt reported the damage source `RangedDamage`, not `SiegeDamage`. Damage causer = the engine
-  (`Catapult_C`, `Ballista_C`), instigator = the player pawn, projectile `Carryable_CatapultRock_C` / `Ammo_BallistaBolt_C`, ability
-  row `ShootCatapult` / `ShootBallista`. A rock did 3000 per hit, a bolt 100. To react to one engine only, filter on the damage causer
-  class, projectile or ability row, not on the damage source.
-- `bDisableProjectileDamage` blocked rocks, bolts and thrown player weapons. Adding `bEnableSiegeDamage` let the siege-engine
-  projectiles through again while thrown weapons stayed blocked; melee still hit. `bEnableSiegeDamage` alone changed nothing.
-- `AllowedDamageSource` = `[SiegeDamage]` blocked every hit tested (melee, throws, rocks, bolts). Do not use it for catapult targets;
-  which weapons do deal `SiegeDamage` (rams?) is unknown.
-- A `HitWorld` tag on the target made no difference.
-- The retail catapult and ballista classes face their local +X axis.
+Native pushables, the retail battering ram and siege-engine hits on breakables (all verified in game) are in [Pushables, rams and siege hits](pushables-rams-and-siege.md).
 
 ## Player score events (verified in game, 2026-11-16)
 
@@ -171,4 +142,4 @@ Retail maps wire each objective by hand in their level script; every objective u
 
 ## Not tested
 
-Several players, bots, dedicated servers (on clients `HasAuthority` can be true for non-replicated placed actors; prefer an explicit server check there), message-table banners, retail battering rams, capture-area settings, crates broken by weapons, and defenders on a touch trigger.
+Several players, bots, dedicated servers (on clients `HasAuthority` can be true for non-replicated placed actors; prefer an explicit server check there), message-table banners, retail battering rams with bots or several riders, capture-area settings, crates broken by weapons, and defenders on a touch trigger.

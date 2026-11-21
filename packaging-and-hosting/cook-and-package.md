@@ -60,7 +60,7 @@ Record the installed version and rollback artifact privately. Test loading and i
 
 ## How Unchained treats hand-installed PAKs
 
-Source inspection of Unchained Launcher 1.0.2, UnchainedPlugin 1.0.0-rc4 and Unchained-Mods 0.2.2 (November 2026), plus the in-game observations marked below. Check the versions your players run.
+Source inspection of Unchained Launcher 1.0.2, UnchainedPlugin 1.0.0-rc4 and Unchained-Mods 0.2.2 / 0.2.3 (November 2026), plus the in-game observations marked below. Check the versions your players run.
 
 - **Launcher prompt:** at launch the launcher hashes every `*.pak` in the `Paks` root except `pakchunk0-WindowsNoEditor.pak` and asks about each PAK it does not manage ("Unmanaged Mods detected"). **Keep** is remembered per file name and hash, so every rebuild asks again; **Remove** deletes the `.pak` and its `.sig`; **Cancel** aborts the launch. The `always_keep_unmanaged_paks` setting skips the prompt.
 - **Duplicates:** byte-identical PAKs in the root are deleted without asking, together with their `.sig`, unless the `.sig` files differ. Keep one copy of each build.
@@ -72,6 +72,7 @@ Source inspection of Unchained Launcher 1.0.2, UnchainedPlugin 1.0.0-rc4 and Unc
 - **Shown version:** the `ModVersion` of a `DA_ModMarker_V2`, else the mod actor's `ModVersion`, else "Unknown".
 - **Paths Unchained-Mods replaces:** `CampaignFrontendTracker`, `LoadingScreensConfig` and `AIPersonalities` under `/Game`. Mod PAKs must not ship those paths, nor copies of `/Game/Mods/ArgonSDK/**`.
 - **Load delay (in game):** Unchained-Mods 0.2.0 rescanned `/Game/Mods` synchronously on every map load, so the delay grew with the number of installed mod assets (about 32 s with a large library). Version 0.2.2 rescans only when nothing is registered yet; the same setup then loaded in 1-2 s.
+- **Main-menu map lists (Unchained-Mods 0.2.3, release notes and asset names, not yet checked in the menu):** the map Options box and the typed map name field are gone. Map dropdowns are built from `DA_MapGroupInfo` data assets (`/Game/Mods/ArgonSDK/Mods/ModLoading/v2/DataAssets/`). Each group has a display name, an explicit map list and wildcard patterns matched against the map short name, ignoring case. The shipped groups include the official modes (`FFA_*`, `TO_*` and so on) plus Chivalry 1 (`*_CMW_*`), Battle Royale (`*_BR`) and King of the Hill (`*_KOTH`). Name custom maps with the mode prefix so they land in that mode's list. A map can appear in several groups. To add a category, ship your own `DA_MapGroupInfo` asset in your mod folder; groups are additive.
 
 ## Registry publishing format (v1)
 
